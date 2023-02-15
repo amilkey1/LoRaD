@@ -8,10 +8,10 @@ devtools::load_all("../")
 params <- read.table('mcmc-samples.txt', header=TRUE)
 
 # create a data frame holding the column specifications
-colspec <- c("iter"="iteration", "log-kernel"="posterior", "edgelen"="positive", "kappa"="positive")
+colspec <- c("iter"="iteration", "log.kernel"="posterior", "edgelen"="positive", "kappa"="positive")
 
 # run the transform function in the lorad package, providing the params and colspec data frames
-df <- transform(params)
+df <- transform(params, colspec)
 
 # print out the resulting transformed samples
 print(df)

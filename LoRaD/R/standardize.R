@@ -10,7 +10,7 @@ standardize <- function(y) {
   
   #Getting rid of log kernel because it's not a parameter
   last_col_num <- ncol(y)
-  x <- as.matrix[y[,-last_col_num]]
+  x <- as.matrix(y[,-last_col_num])
   
   #Getting dimensions of matrix
   n <- nrow(x)

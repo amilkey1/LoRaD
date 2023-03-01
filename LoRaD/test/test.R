@@ -13,16 +13,18 @@ params <- read.table('mcmc-samples.txt', header=TRUE)
 colspec <- c("iter"="iteration", "log.kernel"="posterior", "edgelen"="positive", "kappa"="positive")
 
 # run the transform function in the lorad package, providing the params and colspec data frames
-df <- transform(params, colspec)
-X <- standardize(df)
-print(X)
-print(cov(X))
-print(colMeans(X))
+#df <- transform(params, colspec)
+#X <- standardize(df)
+#print(X)
+#print(cov(X))
+#print(colMeans(X))
 #print(df_list$means)
 #print(df_list$inv_matrix%*%df_list$matrix)
 #print(df_list$sqrt_matrix%*%df_list$sqrt_matrix)
 #print(df_list$inv_matrix)
 
+z <- lorad(params, colspec, .05, "random")
+print(z)
 # print out the resulting transformed samples
 #print(df)
 #print(df_list)

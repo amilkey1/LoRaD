@@ -24,5 +24,9 @@ lorad <- function(params, colspec, trainingfrac, trainingmode) {
     warning(sprintf("Unknown training mode (%s)", trainingmode))
     stop()
   }
-  z
+  trainingdf <- transformdf[z,]
+  estimationdf <- transformdf[-z,] 
+  standardinfo <- standardize(trainingdf)
+  #list(logJ, invsqrts, colMeans(x), rmax)
+  standardinfo
 }

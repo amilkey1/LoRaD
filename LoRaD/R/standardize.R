@@ -16,6 +16,18 @@ standardize <- function(y) {
   n <- nrow(x)
   p <- ncol(x)
   
+  rmax <- 0.0
+  #Getting rmax
+  for (i in 1:n) {
+    #Making Vector of parameters
+    v <- x[i,]
+    #Squaring elements
+    r <- sqrt(sum(v^2))
+    if (r > rmax){
+      rmax <- r
+    }
+  }
+  
   #Calculating the mean vector
   m <- matrix(rep(colMeans(x), n), byrow = TRUE, ncol = p)
   
@@ -43,8 +55,8 @@ standardize <- function(y) {
   logkern <- names(y)[last_col_num]
   zdf[logkern] <- y[,last_col_num]+logJ
   
-  #Returning dataframe
-  zdf
+  #Returning important info
+  list(logJ, invsqrts, colMeans(x), rmax)
 }
 
 

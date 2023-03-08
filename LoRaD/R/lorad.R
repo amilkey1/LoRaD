@@ -1,8 +1,10 @@
-#' This function takes a data frame y, that contains the log transform parameter values
-#' The log kernel is always the last column 
+#' This function calculates the Lorad estimate of the marginal likelihood
 #'
-#' @y data frame containing a column for each model parameter sampled as well as columns that constitute the log posterior kernel
-#' @return A new data frame consisting of standardize parameter values
+#' @params Parameters, log kernel is always the last column
+#' @colspec Identification of columns
+#' @trainingfrac Fraction of Samples Used in Training
+#' @trainingmode Used Random, Left or Right
+#' @return Lorad estimate of marginal likelihood
 #' @export 
 #'
 lorad <- function(params, colspec, trainingfrac, trainingmode) {
@@ -27,6 +29,15 @@ lorad <- function(params, colspec, trainingfrac, trainingmode) {
   trainingdf <- transformdf[z,]
   estimationdf <- transformdf[-z,] 
   standardinfo <- standardize(trainingdf)
+  #Printing out important info
+  cat("\nPartitioning Samples Into Training and Estimation:\n")
+  cat(sprintf("   Sample Size Is %d\n",nrow(transformdf)))
+  #Printing out Training Info
+  cat(sprintf("   Training Sample Size Is %d\n",nrow(trainingdf)))
+  #Printing out Estimation Sample Size
+  cat(sprintf("   Estimation Sample Size %d\n",nrow(estimationdf)))
   #list(logJ, invsqrts, colMeans(x), rmax)
-  standardinfo
+  #standardinfo
+  df <- standardize_estimation_sample(standardinfo, estimationdf)
+  df
 }

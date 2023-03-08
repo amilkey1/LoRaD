@@ -2,7 +2,7 @@
 #' The log kernel is always the last column 
 #'
 #' @y data frame containing a column for each model parameter sampled as well as columns that constitute the log posterior kernel
-#' @return A new data frame consisting of standardize parameter values
+#' @return A list of standardize info of logJ, invsqrts, colMeans(x), rmax
 #' @export 
 #'
 standardize <- function(y) {

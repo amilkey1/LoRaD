@@ -24,7 +24,7 @@ colspec <- c("iter"="iteration", "log.kernel"="posterior", "edgelen"="positive",
 #print(df_list$inv_matrix)
 
 z <- lorad(params, colspec, .05, "random")
-print(z)
+#print(z)
 # print out the resulting transformed samples
 #print(df)
 #print(df_list)

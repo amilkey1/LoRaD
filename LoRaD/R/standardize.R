@@ -46,7 +46,7 @@ standardize <- function(y) {
   z <- (x-m)%*%invsqrts
   
   #Computing log Jacobian
-  logJ <- as.numeric(determinant(invsqrts,logarithm = TRUE)$modulus)
+  logJ <- as.numeric(determinant(sqrts,logarithm = TRUE)$modulus)
   
   #Converting z to dataframe
   zdf <- as.data.frame(z)

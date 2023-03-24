@@ -11,6 +11,13 @@ lorad <- function(params, colspec, trainingfrac, trainingmode) {
   transformdf <- transform(params, colspec)
   nsamples <- nrow(transformdf)
   tmode <- tolower(trainingmode)
+  
+  # Specified training fraction must lie between 0 and 1
+  if (training_frac <= 0 || training_frac >= 1.0) {
+  	warning(sprintf("training fraction must be between 0 and 1 (%g)",training_frac))
+  	stop()
+  }
+	
   y <- floor(trainingfrac*nsamples)
   if (tmode == "random") {
     x <- 1:nsamples
@@ -26,47 +33,56 @@ lorad <- function(params, colspec, trainingfrac, trainingmode) {
     warning(sprintf("Unknown training mode (%s)", trainingmode))
     stop()
   }
+  
+  # Partition transformed samples into training and estimation samples
   trainingdf <- transformdf[z,]
   estimationdf <- transformdf[-z,] 
   standardinfo <- standardize(trainingdf)
-  #Printing out important info
+  
+  # standardinfo contains list(logJ, invsqrts, colmeans(x), rmax)
+  
+  # Printing out important info
   cat("\nPartitioning Samples Into Training and Estimation:\n")
   cat(sprintf("   Sample Size Is %d\n",nrow(transformdf)))
-  #Printing out Training Info
+  # Printing out Training Info
   cat(sprintf("   Training Sample Size Is %d\n",nrow(trainingdf)))
-  #Printing out Estimation Sample Size
+  # Printing out Estimation Sample Size
   cat(sprintf("   Estimation Sample Size %d\n",nrow(estimationdf)))
-  #list(logJ, invsqrts, colMeans(x), rmax)
-  #standardinfo
+  
   df <- standardize_estimation_sample(standardinfo, estimationdf)
   df
   
-  #Store all but last column from Dataframe
-  #Store last column as vector log posterior kernel
+  # Store all but last column from df
+  # Store last column as vector log posterior kernel
+  
   last_col_num <- ncol(df)
   x <- as.matrix(df[,-last_col_num])
   logpostkern <- as.matrix(df[,last_col_num])
-  #Getting number of params
-  p <- ncol(x)
-  #Getting max radius of any point in training sample
-  rmax <- standardinfo[[4]]
   
+  # p is the number of parameters
+  p <- ncol(x)
+  
+  # rmax is the maximum radius of any point in the training sample
+  rmax <- standardinfo[[4]]
   
   cat("\nProcessing Training Sample:\n")
   cat(sprintf("   Lowest Radial Distance is %.5f\n",rmax))
   
-  #St Dev For St normal is one
+  # sigma_squared = 1 for standard normal
   sigmasqr <- 1
   
-  #Calculating Delta
-  S <- p/2.0
-  T <- rmax^2/(2.0*sigmasqr)
-  logdelta <- pgamma(S,T,sigmasqr)
+  # Compute Delta, which is the integral from 0 to rmax of the marginal
+  # distribution of radial vector lengths from a p-dimensional multivariate
+  # standard normal distribution
+  s <- p/2.0
+  t <- rmax^2/(2.0*sigmasqr)
+  logdelta <- pgamma(s,t,sigmasqr)
   cat(sprintf("   Log Delta %.5f\n",logdelta))
-  #Calculating normalizing constant for reference function (St Normal)
+  
+  #Calculating normalizing constant for reference function (multivariate std normal)
   sigma <- sqrt(sigmasqr)
   logmvnormconstant <- .5*p*log(2.0*pi)+1.0*p*log(sigma)
-  cat(sprintf("   Normalizing Constant for Reference Function %.5f\n",logmvnormconstant))
+  # cat(sprintf("   Normalizing Constant for Reference Function %.5f\n",logmvnormconstant))
   
   
   #Initialize Variables
@@ -74,19 +90,18 @@ lorad <- function(params, colspec, trainingfrac, trainingmode) {
   nestimation <- nrow(estimationdf)
   
   
-  #Calculate Sum of Ratios, Using Multinormal reference function 
-  J <- 0.0
+  #Calculate sum of ratios, Using multivariate standard normal reference function 
+  j <- 0.0
   for (i in 1:nestimation) {
-    #Calculating Norm for the Sample
+    #Calculating norm for the ith sample
     v <- x[i,]
     r <- sqrt(sum(v^2))
     if (r<=rmax) {
-      J <- J+1 
+      j <- j+1 
       logkernel <- logpostkern[i,]
-      
       logreference <- .5*sigmasqr*r^2-logmvnormconstant
       logratio <- logreference-logkernel
-      logratios[J] <- logratio
+      logratios[j] <- logratio
     }
   }
   logratios

@@ -7,7 +7,7 @@ print(getwd())
 devtools::load_all("../")
 
 # create a data frame holding the parameter sample
-params <- read.table('mcmc-samples.txt', header=TRUE)
+params <- read.table('jc-samples.txt', header=TRUE)
 
 # create a data frame holding the column specifications
 colspec <- c("iter"="iteration", "log.kernel"="posterior", "edgelen"="positive", "kappa"="positive")
@@ -23,7 +23,7 @@ colspec <- c("iter"="iteration", "log.kernel"="posterior", "edgelen"="positive",
 #print(df_list$sqrt_matrix%*%df_list$sqrt_matrix)
 #print(df_list$inv_matrix)
 
-z <- lorad(params, colspec, .05, "random")
+z <- lorad(params, colspec, .5, "random")
 print(z)
 # print out the resulting transformed samples
 #print(df)

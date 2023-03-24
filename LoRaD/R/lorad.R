@@ -2,15 +2,15 @@
 #'
 #' @params Parameters, log kernel is always the last column
 #' @colspec Identification of columns
-#' @trainingfrac Fraction of Samples Used in Training
+#' @training_frac Fraction of Samples Used in Training
 #' @trainingmode Used Random, Left or Right
 #' @return Lorad estimate of marginal likelihood
 #' @export 
 #'
-lorad <- function(params, colspec, training_frac, trainingmode) {
-  transformdf <- transform(params, colspec)
-  nsamples <- nrow(transformdf)
-  tmode <- tolower(trainingmode)
+lorad <- function(params, colspec, training_frac, training_mode) {
+  transform_df <- transform(params, colspec)
+  nsamples <- nrow(transform_df)
+  tmode <- tolower(training_mode)
   
   # Specified training fraction must lie between 0 and 1
   if (training_frac <= 0 || training_frac >= 1.0) {
@@ -30,63 +30,63 @@ lorad <- function(params, colspec, training_frac, trainingmode) {
     z <- y:nsamples
   }
   else {
-    warning(sprintf("Unknown training mode (%s)", trainingmode))
+    warning(sprintf("Unknown training mode (%s)", training_mode))
     stop()
   }
   
   # Partition transformed samples into training and estimation samples
-  trainingdf <- transformdf[z,]
-  estimationdf <- transformdf[-z,] 
-  standardinfo <- standardize(trainingdf)
+  training_df <- transform_df[z,]
+  estimation_df <- transform_df[-z,] 
+  standard_info <- standardize(training_df)
   
   # standardinfo contains list(logJ, invsqrts, colmeans(x), rmax)
   
   # Printing out important info
   cat("\nPartitioning Samples Into Training and Estimation:\n")
-  cat(sprintf("   Sample Size Is %d\n",nrow(transformdf)))
+  cat(sprintf("   Sample Size Is %d\n",nrow(transform_df)))
   # Printing out Training Info
-  cat(sprintf("   Training Sample Size Is %d\n",nrow(trainingdf)))
+  cat(sprintf("   Training Sample Size Is %d\n",nrow(training_df)))
   # Printing out Estimation Sample Size
-  cat(sprintf("   Estimation Sample Size %d\n",nrow(estimationdf)))
+  cat(sprintf("   Estimation Sample Size %d\n",nrow(estimation_df)))
   
-  df <- standardize_estimation_sample(standardinfo, estimationdf)
+  df <- standardize_estimation_sample(standard_info, estimation_df)
   
   # Extract just the parameters from estimation_df
   # Leave out last column (log posterior kernel values)
   
-  last_col_num <- ncol(estimationdf)
-  x <- as.matrix(estimationdf[,-last_col_num])
-  logpostkern <- as.matrix(estimationdf[,last_col_num])
+  last_col_num <- ncol(estimation_df)
+  x <- as.matrix(estimation_df[,-last_col_num])
+  log_post_kern <- as.matrix(estimation_df[,last_col_num])
   
   # p is the number of parameters
   p <- ncol(x)
   
   # rmax is the maximum radius of any point in the training sample
-  rmax <- standardinfo[[4]]
+  rmax <- standard_info[[4]]
   
   cat("\nProcessing Training Sample:\n")
   cat(sprintf("   Lowest Radial Distance is %.5f\n",rmax))
   
   # sigma_squared = 1 for standard normal
-  sigmasqr <- 1
+  sigma_sqr <- 1
   
   # Compute Delta, which is the integral from 0 to rmax of the marginal
   # distribution of radial vector lengths from a p-dimensional multivariate
   # standard normal distribution
   s <- p/2.0
-  t <- rmax^2/(2.0*sigmasqr)
-  logdelta <- pgamma(s,t,sigmasqr)
-  cat(sprintf("   Log Delta %.5f\n",logdelta))
+  t <- rmax^2/(2.0*sigma_sqr)
+  log_delta <- pgamma(s,t,sigma_sqr)
+  cat(sprintf("   Log Delta %.5f\n",log_delta))
   
   #Calculating normalizing constant for reference function (multivariate std normal)
-  sigma <- sqrt(sigmasqr)
-  logmvnormconstant <- .5*p*log(2.0*pi)+1.0*p*log(sigma)
-  # cat(sprintf("   Normalizing Constant for Reference Function %.5f\n",logmvnormconstant))
+  sigma <- sqrt(sigma_sqr)
+  log_mvnorm_constant <- .5*p*log(2.0*pi)+1.0*p*log(sigma)
+  # cat(sprintf("   Normalizing Constant for Reference Function %.5f\n",log_mvnorm_constant))
   
   
   #Initialize Variables
-  logratios <- numeric()
-  nestimation <- nrow(estimationdf)
+  log_ratios <- numeric()
+  nestimation <- nrow(estimation_df)
   
   
   #Calculate sum of ratios, Using multivariate standard normal reference function 
@@ -97,11 +97,11 @@ lorad <- function(params, colspec, training_frac, trainingmode) {
     r <- sqrt(sum(v^2))
     if (r<=rmax) {
       j <- j+1 
-      logkernel <- logpostkern[i,]
-      logreference <- .5*sigmasqr*r^2-logmvnormconstant
-      logratio <- logreference-logkernel
-      logratios[j] <- logratio
+      log_kernel <- log_post_kern[i,]
+      log_reference <- .5*sigma_sqr*r^2-log_mvnorm_constant
+      log_ratio <- log_reference-log_kernel
+      log_ratios[j] <- log_ratio
     }
   }
-  logratios
+  log_ratios
 }

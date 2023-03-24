@@ -5,58 +5,79 @@
 #' @return A list of standardize info of logJ, invsqrts, colMeans(x), rmax
 #' @export 
 #'
-standardize <- function(y) {
+standardize <- function(df) {
   cat("\nStandardizing Params:\n")
   
-  #Getting rid of log kernel because it's not a parameter
-  last_col_num <- ncol(y)
-  x <- as.matrix(y[,-last_col_num])
+    #Getting dimensions of matrix
+  n <- nrow(df)
+  p <- ncol(df) - 1  # last column is not a parameter
+
+  # Create matrix x from df by dropping log_kernel column
+  last_col_num <- ncol(df)
+  x <- as.matrix(df[,-last_col_num])
   
-  #Getting dimensions of matrix
-  n <- nrow(x)
-  p <- ncol(x)
-  
-  rmax <- 0.0
-  #Getting rmax
-  for (i in 1:n) {
-    #Making Vector of parameters
-    v <- x[i,]
-    #Squaring elements
-    r <- sqrt(sum(v^2))
-    if (r > rmax){
-      rmax <- r
-    }
-  }
-  
-  #Calculating the mean vector
+  # Calculating the mean vector
+  meanvect <- colMeans(x)
   m <- matrix(rep(colMeans(x), n), byrow = TRUE, ncol = p)
-  
-  #Calculating the Variance-Covariance Matrix
+
+  # Calculating the Variance-Covariance matrix
   s <-cov(x)
   
-  #Getting Eigen vectors and values
+  # Getting Eigen vectors and values
   lamb <- eigen(s)$value
   vec <- eigen(s)$vector
   
-  #Calculating sqrt of s
-  sqrts <- vec%*%diag(sqrt(lamb))%*%t(vec)
-  invsqrts <- vec%*%diag(1/sqrt(lamb))%*%t(vec)
-  
-  #Performing the standardization
+  # Calculating sqrt of s
+  if (p == 1) {
+    sqrts <- matrix(sqrt(lamb), ncol=1)
+    invsqrts <- matrix(1/sqrt(lamb), ncol=1)
+    logJ <- 0.5*log(lamb)
+  }
+  else {
+    sqrts <- vec%*%diag(sqrt(lamb))%*%t(vec)
+    invsqrts <- vec%*%diag(1/sqrt(lamb))%*%t(vec)
+    logJ <- as.numeric(determinant(invsqrts,logarithm = TRUE)$modulus)
+  }
+    
+  # Performing the standardization
   z <- (x-m)%*%invsqrts
   
-  #Computing log Jacobian
-  logJ <- as.numeric(determinant(sqrts,logarithm = TRUE)$modulus)
+  # make a vector of norms
+  norms <- numeric()
+  for (i in 1:n) {
+    # vector of params
+    v <- z[i,]
+    
+    # compute the radius (norm)
+    r <- sqrt(sum(v^2))
+    
+    # append r to norms vector
+    norms[i] <- r
+  }
   
-  #Converting z to dataframe
+  # Converting z to dataframe
   zdf <- as.data.frame(z)
   
-  #Adding log Jacobian to log kernel to complete transformation
-  logkern <- names(y)[last_col_num]
-  zdf[logkern] <- y[,last_col_num]+logJ
+  # Append norms vector to z
+  zdf["norm"] <- norms
+  
+  # Append log kernel vector to z
+  zdf["logkernel"] <- df[,last_col_num] + logJ
+  
+  # sort z by norm
+  zdfsorted <- zdf[order(zdf$norm),]
+
+  # Retain only first n*coverage elements of sorted data frame
+  
+  # for now:
+  n <- p
+  
+  # rmax is the largest radius (norm) found in that portion of the
+  # training sample retained
+  rmax <- zdf$norm[[n]]
   
   #Returning important info
-  list(logJ, invsqrts, colMeans(x), rmax)
+  list(logJ, invsqrts, meanvect, rmax)
 }
 
 

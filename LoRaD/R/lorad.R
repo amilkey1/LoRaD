@@ -88,7 +88,6 @@ lorad <- function(params, colspec, training_frac, training_mode) {
   log_ratios <- numeric()
   nestimation <- nrow(estimation_df)
   
-  
   #Calculate sum of ratios, Using multivariate standard normal reference function 
   j <- 0.0
   for (i in 1:nestimation) {
@@ -103,5 +102,5 @@ lorad <- function(params, colspec, training_frac, training_mode) {
       log_ratios[j] <- log_ratio
     }
   }
-  log_ratios
+  # log_ratios
 }

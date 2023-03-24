@@ -7,7 +7,7 @@
 #' @return Lorad estimate of marginal likelihood
 #' @export 
 #'
-lorad <- function(params, colspec, trainingfrac, trainingmode) {
+lorad <- function(params, colspec, training_frac, trainingmode) {
   transformdf <- transform(params, colspec)
   nsamples <- nrow(transformdf)
   tmode <- tolower(trainingmode)
@@ -18,7 +18,7 @@ lorad <- function(params, colspec, trainingfrac, trainingmode) {
   	stop()
   }
 	
-  y <- floor(trainingfrac*nsamples)
+  y <- floor(training_frac*nsamples)
   if (tmode == "random") {
     x <- 1:nsamples
     z <- sample(x, y)
@@ -50,14 +50,13 @@ lorad <- function(params, colspec, trainingfrac, trainingmode) {
   cat(sprintf("   Estimation Sample Size %d\n",nrow(estimationdf)))
   
   df <- standardize_estimation_sample(standardinfo, estimationdf)
-  df
   
-  # Store all but last column from df
-  # Store last column as vector log posterior kernel
+  # Extract just the parameters from estimation_df
+  # Leave out last column (log posterior kernel values)
   
-  last_col_num <- ncol(df)
-  x <- as.matrix(df[,-last_col_num])
-  logpostkern <- as.matrix(df[,last_col_num])
+  last_col_num <- ncol(estimationdf)
+  x <- as.matrix(estimationdf[,-last_col_num])
+  logpostkern <- as.matrix(estimationdf[,last_col_num])
   
   # p is the number of parameters
   p <- ncol(x)

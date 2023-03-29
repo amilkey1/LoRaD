@@ -4,10 +4,12 @@
 #' @colspec Identification of columns
 #' @training_frac Fraction of Samples Used in Training
 #' @trainingmode Used Random, Left or Right
+#' @coverage Fraction of training sample used to compute working parameter space
 #' @return Lorad estimate of marginal likelihood
 #' @export 
 #'
-lorad <- function(params, colspec, training_frac, training_mode) {
+#'
+lorad <- function(params, colspec, training_frac, training_mode, coverage) {
   transform_df <- transform(params, colspec)
   nsamples <- nrow(transform_df)
   tmode <- tolower(training_mode)
@@ -37,7 +39,7 @@ lorad <- function(params, colspec, training_frac, training_mode) {
   # Partition transformed samples into training and estimation samples
   training_df <- transform_df[z,]
   estimation_df <- transform_df[-z,] 
-  standard_info <- standardize(training_df)
+  standard_info <- standardize(training_df, coverage)
   
   # standardinfo contains list(logJ, invsqrts, colmeans(x), rmax)
   
@@ -103,4 +105,19 @@ lorad <- function(params, colspec, training_frac, training_mode) {
     }
   }
   # log_ratios
+  cat("\nProcessing Estimation Sample:\n")
+  cat(sprintf("Number of samples used is %d\n",j))
+  cat(sprintf("Nominal coverage specified is %f\n",coverage))
+  cat(sprintf("Actual coverage is %f\n",j/nestimation))
+  
+  if (length(log_ratios)==0){
+    warning(sprintf("No estimation samples were within the working parameter space (rmax=%g)",rmax))
+    stop()
+  }
+  
+  log_sum_ratios <- calcLogSum(log_ratios)
+  #Calculate LoRaD estimate of maximum likelihood
+  log_marginal_likelihood <- log_delta - (log_sum_ratios - log(nestimation))
+  cat(sprintf("Log marginal likelihood is %f\n",log_marginal_likelihood))
+  
 }

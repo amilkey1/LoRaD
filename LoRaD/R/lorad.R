@@ -13,6 +13,7 @@ lorad <- function(params, colspec, training_frac, training_mode, coverage) {
   transform_df <- transform(params, colspec)
   nsamples <- nrow(transform_df)
   tmode <- tolower(training_mode)
+    
   
   # Specified training fraction must lie between 0 and 1
   if (training_frac <= 0 || training_frac >= 1.0) {
@@ -39,9 +40,6 @@ lorad <- function(params, colspec, training_frac, training_mode, coverage) {
   # Partition transformed samples into training and estimation samples
   training_df <- transform_df[z,]
   estimation_df <- transform_df[-z,] 
-  standard_info <- standardize(training_df, coverage)
-  
-  # standardinfo contains list(logJ, invsqrts, colmeans(x), rmax)
   
   # Printing out important info
   cat("\nPartitioning Samples Into Training and Estimation:\n")
@@ -51,15 +49,21 @@ lorad <- function(params, colspec, training_frac, training_mode, coverage) {
   # Printing out Estimation Sample Size
   cat(sprintf("   Estimation Sample Size %d\n",nrow(estimation_df)))
   
-  df <- standardize_estimation_sample(standard_info, estimation_df)
   
   # Extract just the parameters from estimation_df
   # Leave out last column (log posterior kernel values)
   
   last_col_num <- ncol(estimation_df)
-  x <- as.matrix(estimation_df[,-last_col_num])
   log_post_kern <- as.matrix(estimation_df[,last_col_num])
   
+  # compute mean vector and inverse square root of covariance matrix
+  # needed for transforming the estimation sample
+  
+ standard_info <- standardize(training_df, coverage)
+   # standardinfo contains list(logJ, invsqrts, colmeans(x), rmax)
+ df <- standardize_estimation_sample(standard_info, estimation_df)
+      x <- as.matrix(df[,-last_col_num])
+      
   # p is the number of parameters
   p <- ncol(x)
   
@@ -77,8 +81,8 @@ lorad <- function(params, colspec, training_frac, training_mode, coverage) {
   # standard normal distribution
   s <- p/2.0
   t <- rmax^2/(2.0*sigma_sqr)
-  log_delta <- pgamma(s,t,sigma_sqr)
-  cat(sprintf("   Log Delta %.5f\n",log_delta))
+  log_delta <- log(pgamma(t, shape=s, scale=1))
+  # cat(sprintf("   Log Delta %.5f\n",log_delta))
   
   #Calculating normalizing constant for reference function (multivariate std normal)
   sigma <- sqrt(sigma_sqr)
@@ -98,12 +102,13 @@ lorad <- function(params, colspec, training_frac, training_mode, coverage) {
     r <- sqrt(sum(v^2))
     if (r<=rmax) {
       j <- j+1 
-      log_kernel <- log_post_kern[i,]
-      log_reference <- .5*sigma_sqr*r^2-log_mvnorm_constant
-      log_ratio <- log_reference-log_kernel
+      log_kernel <- log_post_kern[i]
+      log_reference <- -.5*sigma_sqr*r^2 - log_mvnorm_constant
+      log_ratio <- log_reference - log_kernel
       log_ratios[j] <- log_ratio
     }
   }
+ 
   # log_ratios
   cat("\nProcessing Estimation Sample:\n")
   cat(sprintf("Number of samples used is %d\n",j))

@@ -49,7 +49,6 @@ lorad <- function(params, colspec, training_frac, training_mode, coverage) {
   # Printing out Estimation Sample Size
   cat(sprintf("   Estimation Sample Size %d\n",nrow(estimation_df)))
   
-  
   # Extract just the parameters from estimation_df
   # Leave out last column (log posterior kernel values)
   
@@ -61,8 +60,13 @@ lorad <- function(params, colspec, training_frac, training_mode, coverage) {
   
  standard_info <- standardize(training_df, coverage)
    # standardinfo contains list(logJ, invsqrts, colmeans(x), rmax)
- df <- standardize_estimation_sample(standard_info, estimation_df)
-      x <- as.matrix(df[,-last_col_num])
+   logj <- standard_info[[1]]
+   cat(sprintf("   logj = %.5f\n",logj))
+   df <- standardize_estimation_sample(standard_info, estimation_df)
+ 
+   last_col_num <- ncol(estimation_df)
+  x <- as.matrix(df[,-last_col_num])
+  log_post_kern <- as.matrix(df[,last_col_num])
       
   # p is the number of parameters
   p <- ncol(x)

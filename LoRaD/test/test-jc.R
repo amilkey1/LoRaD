@@ -17,4 +17,4 @@ colspec <- c("iter"="iteration", "log.kernel"="posterior", "edgelen"="positive",
 # the params and colspec data frames as well as specifying
 # the training fraction, the training sample selection method,
 # and the coverage fraction
-lorad(params, colspec, 0.5, "left", 0.5)
+lorad(params, colspec, 0.5, "left", 0.5, "jc-samples.txt")

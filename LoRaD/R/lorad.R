@@ -5,12 +5,17 @@
 #' @training_frac Fraction of Samples Used in Training
 #' @trainingmode Used Random, Left or Right
 #' @coverage Fraction of training sample used to compute working parameter space
+#' @file_name Name of parameter file
 #' @return Lorad estimate of marginal likelihood
 #' @export 
 #'
-#'
-lorad <- function(params, colspec, training_frac, training_mode, coverage) {
+lorad <- function(params, colspec, training_frac, training_mode, coverage, file_name) {
+  cat("This is loRad (Version 1.0):\n")
+  cat(sprintf("   Parameter Sample File is : %s\n", file_name))
   transform_df <- transform(params, colspec)
+  
+  cat(sprintf("   Traning Fraction is : %g\n", training_frac))
+  cat(sprintf("   Coverage Spec is : %g\n", coverage))
   nsamples <- nrow(transform_df)
   tmode <- tolower(training_mode)
     
@@ -40,6 +45,9 @@ lorad <- function(params, colspec, training_frac, training_mode, coverage) {
   # Partition transformed samples into training and estimation samples
   training_df <- transform_df[z,]
   estimation_df <- transform_df[-z,] 
+  
+  cat("Reading Parameter Sample File ...\n")
+  cat(sprintf("   Processed %d column specification \n", ncol(colspec)))
   
   # Printing out important info
   cat("\nPartitioning Samples Into Training and Estimation:\n")

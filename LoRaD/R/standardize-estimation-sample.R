@@ -6,7 +6,7 @@
 #' @export 
 #'
 standardize_estimation_sample <- function(standardinfo, y) {
-  cat("\nStandardizing estimation sample:\n")
+  #cat("\nStandardizing estimation sample:\n")
   
   #Getting rid of log kernel because it's not a parameter
   last_col_num <- ncol(y)

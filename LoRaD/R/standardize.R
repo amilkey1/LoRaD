@@ -7,7 +7,7 @@
 #' @export 
 #'
 standardize <- function(df, coverage) {
-  cat("\nStandardizing Params:\n")
+  #cat("\nStandardizing Params:\n")
   
     #Getting dimensions of matrix
   n <- nrow(df)

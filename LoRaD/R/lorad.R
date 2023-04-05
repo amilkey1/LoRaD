@@ -10,12 +10,16 @@
 #' @export 
 #'
 lorad <- function(params, colspec, training_frac, training_mode, coverage, file_name) {
-  cat("This is loRad (Version 1.0):\n")
+  cat("This is loRad (ver. 1.0):\n")
   cat(sprintf("   Parameter Sample File is : %s\n", file_name))
   transform_df <- transform(params, colspec)
   
-  cat(sprintf("   Traning Fraction is : %g\n", training_frac))
-  cat(sprintf("   Coverage Spec is : %g\n", coverage))
+  cat(sprintf("   Traning fraction is %g\n", training_frac))
+  cat(sprintf("   Coverage specified is %g\n", coverage))
+  cat("   Starting sample is 0\n")
+  cat("   Ending sample is 0\n")
+  cat("   MCSE calculation requested: no\n\n")
+  
   nsamples <- nrow(transform_df)
   tmode <- tolower(training_mode)
     
@@ -46,16 +50,20 @@ lorad <- function(params, colspec, training_frac, training_mode, coverage, file_
   training_df <- transform_df[z,]
   estimation_df <- transform_df[-z,] 
   
-  cat("Reading Parameter Sample File ...\n")
-  cat(sprintf("   Processed %d column specification \n", ncol(colspec)))
+   cat("Reading parameter sample file ...\n")
+   cat(sprintf("   Processed %d column specifications \n", length(colspec)))
+   cat(sprintf("   Found %d parameters \n", ncol(estimation_df)-1))
+   cat(sprintf("   Found %d columns \n", length(params)))
+   cat(sprintf("   File has %d lines \n", nrow(params)+1))
+   cat(sprintf("   Found %d values for each column \n", nrow(params)))
   
   # Printing out important info
-  cat("\nPartitioning Samples Into Training and Estimation:\n")
-  cat(sprintf("   Sample Size Is %d\n",nrow(transform_df)))
+  cat("\nPartitioning samples into training and estimation:\n")
+  cat(sprintf("   Sample size is %d\n",nrow(transform_df)))
   # Printing out Training Info
-  cat(sprintf("   Training Sample Size Is %d\n",nrow(training_df)))
+  cat(sprintf("   Training sample Size is %d\n",nrow(training_df)))
   # Printing out Estimation Sample Size
-  cat(sprintf("   Estimation Sample Size %d\n",nrow(estimation_df)))
+  cat(sprintf("   Estimation sample size %d\n",nrow(estimation_df)))
   
   # Extract just the parameters from estimation_df
   # Leave out last column (log posterior kernel values)
@@ -66,13 +74,13 @@ lorad <- function(params, colspec, training_frac, training_mode, coverage, file_
   # compute mean vector and inverse square root of covariance matrix
   # needed for transforming the estimation sample
   
- standard_info <- standardize(training_df, coverage)
-   # standardinfo contains list(logJ, invsqrts, colmeans(x), rmax)
-   logj <- standard_info[[1]]
-   cat(sprintf("   logj = %.5f\n",logj))
-   df <- standardize_estimation_sample(standard_info, estimation_df)
+  standard_info <- standardize(training_df, coverage)
+  # standardinfo contains list(logJ, invsqrts, colmeans(x), rmax)
+  logj <- standard_info[[1]]
+  # cat(sprintf("   logj = %.5f\n",logj))
+  df <- standardize_estimation_sample(standard_info, estimation_df)
  
-   last_col_num <- ncol(estimation_df)
+  last_col_num <- ncol(estimation_df)
   x <- as.matrix(df[,-last_col_num])
   log_post_kern <- as.matrix(df[,last_col_num])
       
@@ -82,8 +90,8 @@ lorad <- function(params, colspec, training_frac, training_mode, coverage, file_
   # rmax is the maximum radius of any point in the training sample
   rmax <- standard_info[[4]]
   
-  cat("\nProcessing Training Sample:\n")
-  cat(sprintf("   Lowest Radial Distance is %.5f\n",rmax))
+  cat("\nProcessing training sample...\n")
+  cat(sprintf("   Lowest radial distance is %.5f\n",rmax))
   
   # sigma_squared = 1 for standard normal
   sigma_sqr <- 1
@@ -122,10 +130,10 @@ lorad <- function(params, colspec, training_frac, training_mode, coverage, file_
   }
  
   # log_ratios
-  cat("\nProcessing Estimation Sample:\n")
-  cat(sprintf("Number of samples used is %d\n",j))
-  cat(sprintf("Nominal coverage specified is %f\n",coverage))
-  cat(sprintf("Actual coverage is %f\n",j/nestimation))
+  cat("\nProcessing estimation sample...\n")
+  cat(sprintf("   Number of samples used is %d\n",j))
+  cat(sprintf("   Nominal coverage specified is %f\n",coverage))
+  cat(sprintf("   Actual coverage is %f\n",j/nestimation))
   
   if (length(log_ratios)==0){
     warning(sprintf("No estimation samples were within the working parameter space (rmax=%g)",rmax))
@@ -135,6 +143,6 @@ lorad <- function(params, colspec, training_frac, training_mode, coverage, file_
   log_sum_ratios <- calcLogSum(log_ratios)
   #Calculate LoRaD estimate of maximum likelihood
   log_marginal_likelihood <- log_delta - (log_sum_ratios - log(nestimation))
-  cat(sprintf("Log marginal likelihood is %f\n",log_marginal_likelihood))
+  cat(sprintf("   Log marginal likelihood is %f\n",log_marginal_likelihood))
   
 }

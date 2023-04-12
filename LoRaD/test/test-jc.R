@@ -1,7 +1,7 @@
 # print out the current working directory
 library(devtools)
-library(expint)	
-library(expm)
+#library(expint)	
+#library(expm)
 print(getwd())
 
 # Load loRad (specify .. because that is where the R directory is located

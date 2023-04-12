@@ -16,9 +16,6 @@ lorad <- function(params, colspec, training_frac, training_mode, coverage, file_
   
   cat(sprintf("   Traning fraction is %g\n", training_frac))
   cat(sprintf("   Coverage specified is %g\n", coverage))
-  cat("   Starting sample is 0\n")
-  cat("   Ending sample is 0\n")
-  cat("   MCSE calculation requested: no\n\n")
   
   nsamples <- nrow(transform_df)
   tmode <- tolower(training_mode)
@@ -101,7 +98,7 @@ lorad <- function(params, colspec, training_frac, training_mode, coverage, file_
   # standard normal distribution
   s <- p/2.0
   t <- rmax^2/(2.0*sigma_sqr)
-  log_delta <- log(pgamma(t, shape=s, scale=1))
+  log_delta <- log(stats::pgamma(t, shape=s, scale=1))
   # cat(sprintf("   Log Delta %.5f\n",log_delta))
   
   #Calculating normalizing constant for reference function (multivariate std normal)

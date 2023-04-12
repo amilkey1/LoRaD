@@ -22,7 +22,7 @@ standardize <- function(df, coverage) {
   m <- matrix(rep(colMeans(x), n), byrow = TRUE, ncol = p)
 
   # Calculating the Variance-Covariance matrix
-  s <-cov(x)
+  s <-stats::cov(x)
   
   # Getting Eigen vectors and values
   lamb <- eigen(s)$value

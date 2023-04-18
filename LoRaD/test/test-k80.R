@@ -1,7 +1,5 @@
 # print out the current working directory
 library(devtools)
-library(expint)	
-library(expm)
 print(getwd())
 
 # Load loRad (specify .. because that is where the R directory is located
@@ -17,4 +15,4 @@ colspec <- c("iter"="iteration", "log.kernel"="posterior", "edgelen"="positive",
 # the params and colspec data frames as well as specifying
 # the training fraction, the training sample selection method,
 # and the coverage fraction
-lorad(params, colspec, 0.5, "left", 0.5)
+lorad(params, colspec, 0.5, "left", 0.5, "k80-samples.txt")

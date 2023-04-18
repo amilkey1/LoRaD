@@ -1,6 +1,5 @@
 # print out the current working directory
 library(devtools)
-library(expm)
 print(getwd())
 
 # load loRad (specify .. because that is where the R directory is located
@@ -13,5 +12,4 @@ params <- read.table('k80-samples.txt', header=TRUE)
 colspec <- c("iter"="iteration", "log.kernel"="posterior", "edgelen"="positive", "kappa"="positive")
 
 # run the transform function in the lorad package, providing the params and colspec data frames
-z <- lorad(params, colspec, .5, "left", .5)
-print(z)
+z <- lorad(params, colspec, .5, "left", .5, 'k80-samples.txt')

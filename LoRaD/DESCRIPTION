@@ -6,7 +6,7 @@ Authors@R:
            comment = c(ORCID = "0000-0002-1157-4363")), person("Elena", "Korte", "elena.korte@uconn.edu",
            role = c("aut")), person("Paul", "Lewis", "paul.lewis@uconn.edu", role = c("aut"),
           comment = c(ORCID = "0000-0001-9852-8759")))
-Description: This package estimates marginal likelihood from a posterior sample using the LoRaD method (Wang et al., in submission to Systematic Biology)
+Description: This package estimates marginal likelihood from a posterior sample using the LoRaD method (Wang et al. 2023. LoRaD: marginal likelihood estimation with haste (but no waste). Systematic Biology (in press).).
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8

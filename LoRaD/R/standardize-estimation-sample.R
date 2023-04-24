@@ -1,7 +1,8 @@
 #' This function standardized the estimation sample
 #'
-#' @standardinfo Contains list of logJ, invsqrts, colMeans(x), rmax
-#' @y  data frame containing a column for each transformed model parameter sampled 
+#' \code {standardize_estimation_sample} A function that tajes the parameters standardinfo and y
+#' @param standardinfo Contains list of logJ, invsqrts, colMeans(x), rmax
+#' @param y  data frame containing a column for each transformed model parameter sampled 
 #' @return A new data frame consisting of standardized estimation sample with log kernal in last column
 #' @export 
 #'

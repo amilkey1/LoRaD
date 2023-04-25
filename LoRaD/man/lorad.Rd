@@ -4,7 +4,11 @@
 \alias{lorad}
 \title{This function calculates the Lorad estimate of the marginal likelihood}
 \usage{
+<<<<<<< HEAD
 lorad(params, colspec, training_frac, training_mode, coverage, file_name)
+=======
+lorad(params, colspec, training_frac, training_mode, coverage)
+>>>>>>> cad5ca6023709c43c1b9934cc07be48afdbf3329
 }
 \value{
 Lorad estimate of marginal likelihood

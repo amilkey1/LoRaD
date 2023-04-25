@@ -1,11 +1,12 @@
 #' This function calculates the Lorad estimate of the marginal likelihood
 #'
-#' @params Parameters, log kernel is always the last column
-#' @colspec Identification of columns
-#' @training_frac Fraction of Samples Used in Training
-#' @trainingmode Used Random, Left or Right
-#' @coverage Fraction of training sample used to compute working parameter space
-#' @file_name Name of parameter file
+#' \code {lorad} A function that inputs various parameters
+#' @param params Parameters, log kernel is always the last column
+#' @param colspec Identification of columns
+#' @param training_frac Fraction of Samples Used in Training
+#' @param trainingmode Used Random, Left or Right
+#' @param coverage Fraction of training sample used to compute working parameter space
+#' @param file_name Name of parameter file
 #' @return Lorad estimate of marginal likelihood
 #' @export 
 #'

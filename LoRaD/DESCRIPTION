@@ -13,6 +13,8 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3.9000
 Suggests: 
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 Imports:
 	expint, expm, stats
@@ -21,3 +23,4 @@ Author: Analisa Milkey [aut, cre],
 	Elena Korte [aut],
 	Paul Lewis [aut]
 Config/testthat/edition: 3
+VignetteBuilder: knitr

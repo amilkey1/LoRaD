@@ -6,9 +6,14 @@
 \usage{
 standardize_estimation_sample(standardinfo, y)
 }
+\arguments{
+\item{standardinfo}{Contains list of logJ, invsqrts, colMeans(x), rmax}
+
+\item{y}{data frame containing a column for each transformed model parameter sampled}
+}
 \value{
 A new data frame consisting of standardized estimation sample with log kernal in last column
 }
 \description{
-This function standardized the estimation sample
+\code {standardize_estimation_sample} A function that tajes the parameters standardinfo and y
 }

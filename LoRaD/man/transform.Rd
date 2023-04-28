@@ -8,11 +8,14 @@ data frame represents.}
 \usage{
 transform(params, colspec)
 }
+\arguments{
+\item{params}{Data frame containing a column for each model parameter sampled as well as columns that constitute the log posterior kernel}
+
+\item{colspec}{Dictionary classifying each column of the params data frame}
+}
 \value{
 A new data frame consisting of transformed parameter values
 }
 \description{
-This function takes a params data frame consisting of sampled parameter values
-and a colspec data frame that specifies what each column in the params
-data frame represents.
+\code {transform} Function that uses parameters params and colspec
 }

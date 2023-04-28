@@ -4,15 +4,24 @@
 \alias{lorad}
 \title{This function calculates the Lorad estimate of the marginal likelihood}
 \usage{
-<<<<<<< HEAD
 lorad(params, colspec, training_frac, training_mode, coverage, file_name)
-=======
-lorad(params, colspec, training_frac, training_mode, coverage)
->>>>>>> cad5ca6023709c43c1b9934cc07be48afdbf3329
+}
+\arguments{
+\item{params}{Parameters, log kernel is always the last column}
+
+\item{colspec}{Identification of columns}
+
+\item{training_frac}{Specified training fraction}
+
+\item{training_mode}{Training mode is random, left, or right}
+
+\item{coverage}{Fraction of training sample used to compute working parameter space}
+
+\item{file_name}{Name of parameter file}
 }
 \value{
-Lorad estimate of marginal likelihood
+LoRaD estimate of marginal likelihood
 }
 \description{
-This function calculates the Lorad estimate of the marginal likelihood
+\code {lorad} A function that inputs various parameters
 }

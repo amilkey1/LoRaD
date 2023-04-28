@@ -3,11 +3,11 @@
 #' \code {lorad} A function that inputs various parameters
 #' @param params Parameters, log kernel is always the last column
 #' @param colspec Identification of columns
-#' @param training_frac Fraction of Samples Used in Training
-#' @param trainingmode Used Random, Left or Right
+#' @param training_frac Specified training fraction
+#' @param training_mode Training mode is random, left, or right
 #' @param coverage Fraction of training sample used to compute working parameter space
 #' @param file_name Name of parameter file
-#' @return Lorad estimate of marginal likelihood
+#' @return LoRaD estimate of marginal likelihood
 #' @export 
 #'
 lorad <- function(params, colspec, training_frac, training_mode, coverage, file_name) {

@@ -4,8 +4,8 @@
 #'
 #' \code {transform} Function that uses parameters params and colspec
 #' 
-#' @param param data frame containing a column for each model parameter sampled as well as columns that constitute the log posterior kernel
-#' @param colspec dictionary classifying each column of the params data frame 
+#' @param params Data frame containing a column for each model parameter sampled as well as columns that constitute the log posterior kernel
+#' @param colspec Dictionary classifying each column of the params data frame 
 #' @return A new data frame consisting of transformed parameter values
 #' @export
 transform <- function(params, colspec) {

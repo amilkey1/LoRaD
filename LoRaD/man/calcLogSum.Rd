@@ -2,10 +2,18 @@
 % Please edit documentation in R/calcLogSum.R
 \name{calcLogSum}
 \alias{calcLogSum}
-\title{This function calculates log of a sum without leaving the log scale}
+\title{This function calculates log of a sum without leaving the log scale
+\code {calcLogSum} A function that takes in the parameter logx for calculating the log sum}
 \usage{
 calcLogSum(logx)
 }
+\arguments{
+\item{logx}{Taking the log of a set of numbers}
+}
+\value{
+Give a number on the log scale
+}
 \description{
 This function calculates log of a sum without leaving the log scale
+\code {calcLogSum} A function that takes in the parameter logx for calculating the log sum
 }

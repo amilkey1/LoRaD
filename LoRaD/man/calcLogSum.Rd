@@ -2,8 +2,7 @@
 % Please edit documentation in R/calcLogSum.R
 \name{calcLogSum}
 \alias{calcLogSum}
-\title{This function calculates log of a sum without leaving the log scale
-\code {calcLogSum} A function that takes in the parameter logx for calculating the log sum}
+\title{This function calculates log of a sum without leaving the log scale}
 \usage{
 calcLogSum(logx)
 }
@@ -15,5 +14,4 @@ Give a number on the log scale
 }
 \description{
 This function calculates log of a sum without leaving the log scale
-\code {calcLogSum} A function that takes in the parameter logx for calculating the log sum
 }

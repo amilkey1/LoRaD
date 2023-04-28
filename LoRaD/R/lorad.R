@@ -1,6 +1,5 @@
 #' This function calculates the Lorad estimate of the marginal likelihood
 #'
-#' \code {lorad} A function that inputs various parameters
 #' @param params Parameters, log kernel is always the last column
 #' @param colspec Identification of columns
 #' @param training_frac Specified training fraction

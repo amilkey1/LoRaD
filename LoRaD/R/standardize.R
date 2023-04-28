@@ -1,7 +1,6 @@
 #' This function takes a data frame y, that contains the log transform parameter values
 #' The log kernel is always the last column 
 #' 
-#' \code {standardize} Function in which the parameters are df, a data frame, and coverage
 #' @param df data frame containing a column for each model parameter sampled as well as columns that constitute the log posterior kernel
 #' @param coverage Fraction of training sample used to compute working parameter space
 #' @return A list of standardize info of logJ, invsqrts, colMeans(x), rmax

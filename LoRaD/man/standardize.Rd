@@ -16,5 +16,6 @@ standardize(df, coverage)
 A list of standardize info of logJ, invsqrts, colMeans(x), rmax
 }
 \description{
-\code {standardize} Function in which the parameters are df, a data frame, and coverage
+This function takes a data frame y, that contains the log transform parameter values
+The log kernel is always the last column
 }

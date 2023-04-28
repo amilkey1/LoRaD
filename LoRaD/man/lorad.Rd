@@ -23,5 +23,5 @@ lorad(params, colspec, training_frac, training_mode, coverage, file_name)
 LoRaD estimate of marginal likelihood
 }
 \description{
-\code {lorad} A function that inputs various parameters
+This function calculates the Lorad estimate of the marginal likelihood
 }

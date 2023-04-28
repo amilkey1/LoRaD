@@ -17,5 +17,7 @@ transform(params, colspec)
 A new data frame consisting of transformed parameter values
 }
 \description{
-\code {transform} Function that uses parameters params and colspec
+This function takes a params data frame consisting of sampled parameter values
+and a colspec data frame that specifies what each column in the params
+data frame represents.
 }

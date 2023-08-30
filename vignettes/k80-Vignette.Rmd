@@ -23,35 +23,36 @@ In this vignette, we explain how one can estimate the marginal likelihood using 
 
 # Model and Data
 
-The data for two DNA sequences, each of length xxx sites, were simulated under the k80 substitution model [@Kimura:1980vd]. This model has two parameters:
+The data for two DNA sequences, each of length xxx sites, were simulated under the K80 substitution model [@Kimura:1980vd]. This model has two parameters:
 
 * **transition/transversion rate ratio**, $\kappa$: the ratio of the instantaneous rate of transition-type substitutions (A $\leftrightarrow$G, C$\leftrightarrow$T) to the instantaneous rate of transversion-type substitutions (A$\leftrightarrow$C, A$\leftrightarrow$T, G$\leftrightarrow$C, G$\leftrightarrow$T)
 
-* **edge length**, $v$ : the distance measured in expected substitutions per site
+* **edge length**, $v$ : the distance measured in expected number of substitutions per site
 
-The data (posterior samples) are read from the tab-delimited text file _k80-samples.txt_. In the file there are four columns, iter (mcmc-iteration), log-kernal (transformed log posterior kernal), edgelen (sampled edge length), and kappa (sampled kappa parameter). The file contains 10,000 iterations from 1,000,000 MCMC samples reported every 100 iterations. 
+The data (posterior samples) are read from the tab-delimited text file _k80-samples.txt_. In the file there are four columns, iter (MCMC-iteration), log-kernel (transformed log posterior kernel), edgelen (sampled edge length), and kappa (sampled kappa parameter). The file contains 10,000 iterations from 1,000,000 MCMC samples reported every 100 iterations. 
 
 In this example we will compute an estimate of the marginal likelihood under this model using the LoRaD method.
 
-First, we read in the data. 
+# Reading in Data
+
+First, we load the LoRaD package and read in the data file. 
 
 ```{r}
 library(LoRaD)
 params <- read.table('k80-samples.txt', header=TRUE)
-
 ```
 
 # Column Specification 
 
 Next, we must create a data frame named `colspec` defining the meanings of each column in the data frame `params`. Here are the possible column specifications:
 
-* **iteration**: The mcmc iteration
-* **posterior**: The values in this column are components of the posterior (log-scale)
+* **iteration**: The MCMC iteration
+* **posterior**: The values in this column are components of the posterior (log scale)
 * **positive**: The parameter has positive support $[0,\infty)$
 * **unconstrained**: The parameter has support $(-\infty,\infty)$
 * **ignore**: The column should be ignored
 
-All columns labeled **posterior** will be summed to create the log posterior kernel (product of likelihood and joint prior).
+All columns labeled **posterior** will be summed to create the log posterior kernel (sum of log likelihood and log joint prior).
 
 Here are the column specifications appropriate for this example.
 
@@ -67,7 +68,7 @@ Here are the column specifications appropriate for this example.
 colspec <- c("iter"="iteration", "log.kernel"="posterior", "edgelen"="positive", "kappa"="positive")
 ```
 
-# Computing the Log Marginal Likelihood
+# Computing an Estimate of the Log Marginal Likelihood
 
 To run the LoRaD function we need to specify the **training fraction**, the **training sample selection method**, and the **coverage fraction**. The training fraction and the coverage fraction must be between 0 and 1. The training sample selection method can be _left_ (the first part of the sample), _right_ (the second part of the sample), or _random_ (a random part of the sample).
 

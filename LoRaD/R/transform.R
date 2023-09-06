@@ -1,4 +1,4 @@
-#' This function takes a params data frame consisting of sampled parameter values 
+#' This function takes a data frame consisting of sampled parameter values
 #' and a colspec data frame that specifies what each column in the params
 #' data frame represents.
 #' 
@@ -10,13 +10,13 @@
 
 transform <- function(params, colspec) {
 	num_columns <- ncol(params)
-	#print(sprintf("%d",num_columns))
+
     col_names <- colnames(params)
     OK <- TRUE
 	log_kernel <- params$log.kernel
-	#print(length(colspec))
-	df_col_names <- c()
-	df <-as.data.frame(matrix(nrow=nrow(params),ncol=0))
+
+    df_col_names <- c()
+	df <- as.data.frame(matrix(nrow=nrow(params),ncol=0))
     for (i in 1:num_columns) {
     	value <- colspec[col_names[i]]
     	if (is.na(value)) {
@@ -34,7 +34,6 @@ transform <- function(params, colspec) {
 				df_col_names <- cbind(df_col_names, col_names[i])
 			}
     	}
-    	#print(sprintf("%20s %20s", col_names[i], value))
     }
     
 	df <- cbind(df, log_kernel)
@@ -42,7 +41,9 @@ transform <- function(params, colspec) {
 	names(df) <- df_col_names
     
     if (!OK) {
-    	print("error")
+        warning("colspec does not match column names")
+        stop()
+        # print("error")
     }
     
     df

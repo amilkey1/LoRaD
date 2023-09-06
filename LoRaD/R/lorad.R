@@ -1,8 +1,8 @@
-#' This function calculates the Lorad estimate of the marginal likelihood
+#' This function calculates the LoRaD estimate of the marginal likelihood
 #'
 #' @param params Parameters, log kernel is always the last column
 #' @param colspec Identification of columns
-#' @param training_frac Specified training fraction
+#' @param training_frac Training fraction
 #' @param training_mode Training mode is random, left, or right
 #' @param coverage Fraction of training sample used to compute working parameter space
 #' @param file_name Name of parameter file
@@ -19,7 +19,6 @@ lorad <- function(params, colspec, training_frac, training_mode, coverage, file_
   
   nsamples <- nrow(transform_df)
   tmode <- tolower(training_mode)
-    
   
   # Specified training fraction must lie between 0 and 1
   if (training_frac <= 0 || training_frac >= 1.0) {
@@ -49,17 +48,18 @@ lorad <- function(params, colspec, training_frac, training_mode, coverage, file_
   
    cat("Reading parameter sample file ...\n")
    cat(sprintf("   Processed %d column specifications \n", length(colspec)))
-   cat(sprintf("   Found %d parameters \n", ncol(estimation_df)-1))
-   cat(sprintf("   Found %d columns \n", length(params)))
+   #cat(sprintf("   Found %d parameters \n", ncol(estimation_df)-1)) # subtract 1 because last column is posterior kernel
+   #cat(sprintf("   Found %d columns \n", length(params)))
+   cat(sprintf("   Found %d parameters \n", length(params)))
    cat(sprintf("   File has %d lines \n", nrow(params)+1))
    cat(sprintf("   Found %d values for each column \n", nrow(params)))
   
   # Printing out important info
   cat("\nPartitioning samples into training and estimation:\n")
   cat(sprintf("   Sample size is %d\n",nrow(transform_df)))
-  # Printing out Training Info
-  cat(sprintf("   Training sample Size is %d\n",nrow(training_df)))
-  # Printing out Estimation Sample Size
+  # Printing out training info
+  cat(sprintf("   Training sample size is %d\n",nrow(training_df)))
+  # Printing out estimation sample size
   cat(sprintf("   Estimation sample size %d\n",nrow(estimation_df)))
   
   # Extract just the parameters from estimation_df
@@ -77,6 +77,7 @@ lorad <- function(params, colspec, training_frac, training_mode, coverage, file_
   # cat(sprintf("   logj = %.5f\n",logj))
   df <- standardize_estimation_sample(standard_info, estimation_df)
  
+  # extracting posterior kernel
   last_col_num <- ncol(estimation_df)
   x <- as.matrix(df[,-last_col_num])
   log_post_kern <- as.matrix(df[,last_col_num])
@@ -101,20 +102,19 @@ lorad <- function(params, colspec, training_frac, training_mode, coverage, file_
   log_delta <- log(stats::pgamma(t, shape=s, scale=1))
   # cat(sprintf("   Log Delta %.5f\n",log_delta))
   
-  #Calculating normalizing constant for reference function (multivariate std normal)
+  # Calculating normalizing constant for reference function (multivariate standard normal)
   sigma <- sqrt(sigma_sqr)
   log_mvnorm_constant <- .5*p*log(2.0*pi)+1.0*p*log(sigma)
   # cat(sprintf("   Normalizing Constant for Reference Function %.5f\n",log_mvnorm_constant))
   
-  
-  #Initialize Variables
+  #Initialize variables
   log_ratios <- numeric()
   nestimation <- nrow(estimation_df)
   
   #Calculate sum of ratios, Using multivariate standard normal reference function 
   j <- 0.0
   for (i in 1:nestimation) {
-    #Calculating norm for the ith sample
+    # Calculating norm for the ith sample
     v <- x[i,]
     r <- sqrt(sum(v^2))
     if (r<=rmax) {

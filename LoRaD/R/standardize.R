@@ -1,4 +1,4 @@
-#' This function takes a data frame y, that contains the log transform parameter values
+#' This function takes a data frame y that contains the log transformed parameter values
 #' The log kernel is always the last column 
 #' 
 #' @param df data frame containing a column for each model parameter sampled as well as columns that constitute the log posterior kernel
@@ -9,7 +9,7 @@
 standardize <- function(df, coverage) {
   #cat("\nStandardizing Params:\n")
   
-    #Getting dimensions of matrix
+  #Getting dimensions of matrix
   n <- nrow(df)
   p <- ncol(df) - 1  # last column is not a parameter
 

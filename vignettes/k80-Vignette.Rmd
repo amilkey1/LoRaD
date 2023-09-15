@@ -75,7 +75,7 @@ To run the LoRaD function we need to specify the **training fraction**, the **tr
 For this example we chose 0.5 for both the training fraction and coverage fraction and "left" for the training sample selection method. 
 
 ```{r}
-lorad(params, colspec, 0.5, "left", 0.5, "k80-samples.txt")
+lorad(params, colspec, 0.5, "left", 0.1, "k80-samples.txt")
 ```
 
 The log marginal likelhood is -454.716964.

@@ -46,7 +46,22 @@ lorad_transform <- function(params, colspec) {
 				
 				# Append the column name to the stored column names
 				df_col_names <- cbind(df_col_names, col_names[i])
-			}
+    	    }
+    	  if (column_type == "proportion") {
+    	    # Create vector of log-transformed parameter values
+    	    transformed <- log(params[c(i)])-log(1-params[c(i)])
+    	    
+    	    log_J <- log(params[c(i)])+log(1-params[c(i)])
+    	    # Add the log-Jacobian for the transformation to log_kernel for each row
+    	    # The log-Jacobian for a log transformation is just the log(P)+log(1-P) value
+    	    log_kernel <- log_kernel + log_J
+    	    
+    	    # Append transformed to the growing data frame
+    	    df <- cbind(df, transformed)
+    	    
+    	    # Append the column name to the stored column names
+    	    df_col_names <- cbind(df_col_names, col_names[i])
+    	  }
 			else if (column_type == "unconstrained") {
 				# Append the vector of original parameter values to the growing data frame
 				# No transformation necessary since parameter is already unconstrained

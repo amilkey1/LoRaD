@@ -24,6 +24,11 @@ lorad_transform <- function(params, colspec) {
 	
 	# OK will only be false if user has failed to specify a column type for some column
     OK <- TRUE
+    
+    U1 <- 0.0
+    FIRSTSIMPLEX <- FALSE
+    sumsimplex <- 0.0 
+    FINALSIMPLEX <- FALSE
 
     # Transform (if nonnegative) or copy (if unconstrained) each column	into df
     for (i in 1:num_columns) {
@@ -47,7 +52,7 @@ lorad_transform <- function(params, colspec) {
 				# Append the column name to the stored column names
 				df_col_names <- cbind(df_col_names, col_names[i])
     	    }
-    	  if (column_type == "proportion") {
+    	  else if (column_type == "proportion") {
     	    # Create vector of log-transformed parameter values
     	    transformed <- log(params[c(i)])-log(1-params[c(i)])
     	    
@@ -61,6 +66,62 @@ lorad_transform <- function(params, colspec) {
     	    
     	    # Append the column name to the stored column names
     	    df_col_names <- cbind(df_col_names, col_names[i])
+    	  }
+    	  else if (column_type == "simplex") {
+    	    if (FIRSTSIMPLEX == FALSE){
+    	      U1 = params[c(i)]
+    	      FIRSTSIMPLEX = TRUE
+    	    }
+    	      
+    	    # Create vector of log-transformed parameter values
+    	    transformed <- log(params[c(i)])-log(U1)
+    	    
+    	    log_J <- log(params[c(i)])
+    	    # Add the log-Jacobian for the transformation to log_kernel for each row
+    	    # The log-Jacobian for a log transformation is just the log(U) value
+    	    log_kernel <- log_kernel + log_J
+    	    
+    	    # Append transformed to the growing data frame
+    	    df <- cbind(df, transformed)
+    	    
+    	    # Append the column name to the stored column names
+    	    df_col_names <- cbind(df_col_names, col_names[i])
+    	    
+    	    sumsimplex <- sumsimplex + params[c(i)]
+    	  }
+    	  else if (column_type == "simplexfinal") {
+    	    if (FIRSTSIMPLEX == FALSE){
+    	      U1 = params[c(i)]
+    	      FIRSTSIMPLEX = TRUE
+    	    }
+    	    
+    	    # Create vector of log-transformed parameter values
+    	    transformed <- log(params[c(i)])-log(U1)
+    	    
+    	    log_J <- log(params[c(i)])
+    	    # Add the log-Jacobian for the transformation to log_kernel for each row
+    	    # The log-Jacobian for a log transformation is just the log(U) value
+    	    log_kernel <- log_kernel + log_J
+    	    
+    	    # Append transformed to the growing data frame
+    	    df <- cbind(df, transformed)
+    	    
+    	    # Append the column name to the stored column names
+    	    df_col_names <- cbind(df_col_names, col_names[i])
+    	    
+    	    sumsimplex <- sumsimplex + params[c(i)]
+    	    
+    	    FINALSIMPLEX <- TRUE
+    	    
+    	    if (abs(1-sumsimplex) > 1e-12)
+    	    {
+    	      Ufinal <- 1-sumsimplex
+    	      transformed <- log(Ufinal)-log(U1)
+    	      log_J <- log(Ufinal)
+    	      log_kernel <- log_kernel + log_J
+    	      df <- cbind(df, transformed)
+    	      df_col_names <- cbind(df_col_names, col_names[i])
+    	    }
     	  }
 			else if (column_type == "unconstrained") {
 				# Append the vector of original parameter values to the growing data frame
@@ -89,8 +150,11 @@ lorad_transform <- function(params, colspec) {
     if (!OK) {
         warning("colspec does not match column names")
         stop()
-        # print("error")
     }
+	  if (FIRSTSIMPLEX & !FINALSIMPLEX){
+	    warning("You forgot to label the final simplex column as simplexfinal")
+	    stop()
+	  }
     
     # Return the transformed parameter data frame
     df

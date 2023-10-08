@@ -9,7 +9,7 @@
 #' @export 
 #'
 lorad_estimate <- function(params, colspec, training_frac, training_mode, coverage) {
-    cat("This is loRad (ver. 1.0):\n")
+    cat("This is lorad (ver. 1.0):\n")
 
     # Transform any parameters that are constrained and consolidate log kernel components
     # into a single column named log_kernel that includes Jacobian terms for transformations

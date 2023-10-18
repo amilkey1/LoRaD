@@ -19,11 +19,11 @@ In this vignette, we explain how one can use this program for calculating the ma
 
 # Data
 
-The data was run through the GTR model. This model has X parameters which includes alpha(shape parameter of gamma), edgelength propottions(proportions of tree height), er(exchangeability rate), pi(base frequency), and pinvar(proportion of invariable sites).
+The data was run through the GTR+I+G model. This model has X parameters which includes alpha(shape parameter of gamma), edgelength propottions(proportions of tree height), er(exchangeability rate), pi(base frequency), and pinvar(proportion of invariable sites).
 
 # Model
 
-The GTR model has unequal base frequencies which leads to all six substitution types being different. This model uses simplex data and all the rows need to add up to one or else there will be an error messages. The simplex columns will be named U1 through U4, one for every base. U1 will be a parameter and U2 through U4 will be variables that will be transformed with respect to U1. The data will be graphed as a gamma function where alpha is the shape parameter.
+The GTR model has unequal base frequencies which leads to all six substitution types being different. This model uses simplex data and all the rows need to add up to one or else there will be an error messages. For example, the simplex columns will be named U1 through U4, one for every base. U1 will be a parameter and U2 through U4 will be variables that will be transformed with respect to U1. Rate heterogeneity is modeled under a +I (proportion of invariable sites) and +G (gamma function where alpha is the shape parameter).
 
 # Reading in Data
 
@@ -36,7 +36,7 @@ library(lorad)
 Read in the file containing the posterior sample.
 
 ```{r}
-params <- read.table('GTR-samples.txt', header=TRUE)
+params <- read.table('posterior_samples.log', header=TRUE)
 
 # Dimensions of params
 dim(params)
@@ -51,9 +51,11 @@ Next, we must create a named vector to associate each column name in `params` wi
 
 * **iteration**: The MCMC iteration
 * **posterior**: The values in this column are components of the posterior (log scale)
-* **nonnegative**: The parameter has non-negative support $[0,\infty)$
+* **positive**: The parameter has non-negative support $[0,\infty)$
 * **unconstrained**: The parameter has support $(-\infty,\infty)$
 * **simplex**: The parameter has support $(0,1)$
+* **simplexfinal**: The last simplex parameter has support $(0,1)$
+* **proportion**: The parameter has support $(0,1)$
 * **ignore**: The column should be ignored
 
 All columns labeled **posterior** will be summed to create the log posterior kernel (sum of log likelihood and log joint prior). 
@@ -62,17 +64,47 @@ Here are the column specifications appropriate for this example.
 
 | Column     | Specification |
 | :--------: | :-----------: |
-| iter       |  iteration    |
-| log.kernel |  posterior    |
-| edgelen    | nonnegative   |
-| kappa      | nonnegative   |
+| Iteration  |  iteration    |
+| Posterior  |  posterior    |
+| Likelihood |  ignore       |
+| Prior      |  ignore       |
+| alpha      | positive   |
+| edgelen    | positive   |
+| edge_length_proportions.1 | simplex |
+| edge_length_proportions.2 | simplex |
+| edge_length_proportions.3 | simplex |
+| edge_length_proportions.4 | simplex |
+| edge_length_proportions.5 | simplex |
+| edge_length_proportions.6 | simplex |
+| edge_length_proportions.7 | simplexfinal |
+| edgelens.1 | ignore |
+| edgelens.2 | ignore |
+| edgelens.3 | ignore |
+| edgelens.4 | ignore |
+| edgelens.5 | ignore |
+| edgelens.6 | ignore |
+| edgelens.7 | ignore |
+| er.1 | simplex |
+| er.2 | simplex |
+| er.3 | simplex |
+| er.4 | simplex |
+| er.5 | simplex |
+| er.6 | simplexfinal |
+|pi.1 | simplex |
+|pi.2 | simplex |
+|pi.3 | simplex |
+|pi.4 | simplexfinal |
+| pinvar | proportion |
+| site_rates.1 | ignore |  
+| site_rates.2 | ignore |  
+| site_rates.3 | ignore |  
+| site_rates.4 | ignore | 
+| tree_length | positive |
 
 ```{r}
 # Create a named vector holding the column specifications
-colspec <- c("iter"="iteration", "log.kernel"="posterior", "edgelen"="nonnegative", "kappa"="nonnegative")
+colspec <- c("Iteration"="iteration", "Posterior"="posterior", "Likelihood"="ignore", "Prior"="ignore", "alpha"="iteration", "edge_length_proportions.1."="simplex", "edge_length_proportions.2."="simplex", "edge_length_proportions.3."="simplex", "edge_length_proportions.4."="simplex", "edge_length_proportions.5."="simplex", "edge_length_proportions.6."="simplex", "edge_length_proportions.7."="simplexfinal", "edgelens.1."="ignore", "edgelens.2."="ignore", "edgelens.3."="ignore", "edgelens.4."="ignore", "edgelens.5."="ignore", "edgelens.6."="ignore", "edgelens.7."="ignore", "er.1."="simplex", "er.2."="simplex", "er.3."="simplex", "er.4."="simplex", "er.5."="simplex", "er.6."="simplexfinal", "pi.1."="simplex", "pi.2."="simplex", "pi.3."="simplex", "pi.4."="simplexfinal", "pinvar"="proportion", "site_rates.1."="ignore", "site_rates.2."="ignore", "site_rates.3."="ignore", "site_rates.4."="ignore", "tree_length"="positive")
 ```
-
-The LoRaD requires all parameters to be unconstrained in their support. Thus, the `nonnegative` column specification for both `edgelen` and `kappa` results in a log transformation prior to application of the LoRaD method.
 
 # Computing an Estimate of the Marginal Likelihood
 
@@ -84,4 +116,4 @@ For this example we used 0.5 for the training fraction, 0.1 for the coverage fra
 lorad_estimate(params, colspec, 0.5, "left", 0.1)
 ```
 
-For comparison, the two log marginal likelhood estimates reported by @wang2023 were -460.82239 (LoRaD method) and -460.86154 (Steppingstone method).
+The log marginal likelihood is -4440.062373. 

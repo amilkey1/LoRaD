@@ -63,7 +63,7 @@ In this example we will compute an estimate of the marginal likelihood under thi
 First, load the lorad package.
 
 ```{r}
-library(lorad)
+library(LoRaD)
 ```
 
 Read in the file containing the posterior sample.

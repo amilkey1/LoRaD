@@ -11,6 +11,11 @@
 lorad_estimate <- function(params, colspec, training_frac, training_mode, coverage) {
     cat("This is lorad (ver. 1.0):\n")
 
+  
+  if (length(colspec) == 0) {
+    warning(sprintf("colspec has 0 length"))
+    stop()
+  }
     # Transform any parameters that are constrained and consolidate log kernel components
     # into a single column named log_kernel that includes Jacobian terms for transformations
     transform_df <- lorad_transform(params, colspec)
@@ -47,7 +52,7 @@ lorad_estimate <- function(params, colspec, training_frac, training_mode, covera
         warning(sprintf("Unknown training mode (%s)", training_mode))
         stop()
     }
-
+    
     # Provide feedback to user  
     cat(sprintf("   Parameter sample comprises %d sampled points\n", nsamples))
     cat(sprintf("   Each sample point is a vector of %d parameter values\n", nparams))

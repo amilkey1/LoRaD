@@ -13,8 +13,7 @@ lorad_estimate <- function(params, colspec, training_frac, training_mode, covera
 
   
   if (length(colspec) == 0) {
-    warning(sprintf("colspec has 0 length"))
-    stop()
+    stop("colspec has 0 length")
   }
     # Transform any parameters that are constrained and consolidate log kernel components
     # into a single column named log_kernel that includes Jacobian terms for transformations
@@ -26,8 +25,7 @@ lorad_estimate <- function(params, colspec, training_frac, training_mode, covera
 
     # Specified training fraction must lie between 0 and 1
     if (training_frac <= 0 || training_frac >= 1.0) {
-        warning(sprintf("training fraction must be between 0 and 1 (%g)",training_frac))
-        stop()
+        stop(sprintf("training fraction must be between 0 and 1 but is %g",training_frac))
     }
 	
 	# Determine sites included in training sample and place remainder in estimation sample

@@ -12,6 +12,9 @@ lorad_estimate <- function(params, colspec, training_frac, training_mode, covera
     cat("This is lorad (ver. 1.0):\n")
 
   
+  if (length(params) == 0) {
+    stop("params are missing")
+  }
   if (length(colspec) == 0) {
     stop("colspec has 0 length")
   }
@@ -23,11 +26,22 @@ lorad_estimate <- function(params, colspec, training_frac, training_mode, covera
     nparams <- ncol(transform_df) - 1
     tmode <- tolower(training_mode)
 
+    # Specified training fraction must be numeric
+    if (!is.numeric(training_frac)) {
+      stop(sprintf("training fraction must be numeric"))
+    }
+    # Specified coverage fraction must be numeric
+    if (!is.numeric(coverage)) {
+      stop(sprintf("coverage fraction must be numeric"))
+    }
     # Specified training fraction must lie between 0 and 1
     if (training_frac <= 0 || training_frac >= 1.0) {
         stop(sprintf("training fraction must be between 0 and 1 but is %g",training_frac))
     }
-	
+    # Specified coverage fraction must lie between 0 and 1 
+    if (coverage <= 0 || coverage >= 1.0) {
+      stop(sprintf("coverage fraction must be between 0 and 1 but is %g",coverage))
+    }
 	# Determine sites included in training sample and place remainder in estimation sample
     y <- floor(training_frac*nsamples)
     training_included_sites_str <- "randomly chosen"
@@ -47,8 +61,7 @@ lorad_estimate <- function(params, colspec, training_frac, training_mode, covera
         estim_included_sites_str <- sprintf("sites 1 to %d", y)
     }
     else {
-        warning(sprintf("Unknown training mode (%s)", training_mode))
-        stop()
+        stop(sprintf("Unknown training mode %s", training_mode))
     }
     
     # Provide feedback to user  

@@ -13,6 +13,12 @@ lorad_transform <- function(params, colspec) {
 	num_rows <- nrow(params)
 	num_columns <- ncol(params)
     col_names <- colnames(params)
+    if (length(colspec)>num_columns){
+      stop("colspec does not match column names - colspec is too long")
+    }
+    else if (length(colspec)<num_columns){
+      stop("colspec does not match column names - colspec is too short")
+    }
 
     # Create an empty data frame with same number of rows as params 
     # in which to hold transformed parameter values

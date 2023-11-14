@@ -135,13 +135,6 @@ lorad_transform <- function(params, colspec) {
                     if (max_sumsimplex > 0.00001) {
                         stop("simplex columns do not add to 1 for all rows")
                     }
-                    #    Ufinal <- 1-sumsimplex
-                    #    transformed <- log(Ufinal)-log(U1)
-                    #    log_J <- log(Ufinal)
-                    #    log_kernel <- log_kernel + log_J
-                    #    df <- cbind(df, transformed)
-                    #    df_col_names <- cbind(df_col_names, col_names[i])
-                    #}   
                     
                     INSIMPLEX <- FALSE
                     
@@ -169,8 +162,8 @@ lorad_transform <- function(params, colspec) {
 			    # Ignore ignore columns
 			}
 			else {
-                # User supplied an unknown column spec
-                stop(sprintf("unknown colspec found: %s", column_type))
+			  # User supplied an unknown column spec
+			  stop(sprintf("unknown colspec found: %s", column_type))
 			}
     	}
     }

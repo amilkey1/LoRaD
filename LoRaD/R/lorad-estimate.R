@@ -105,6 +105,9 @@ lorad_estimate <- function(params, colspec, training_frac, training_mode, covera
 
     # The maximum radius of any point in the training sample
     rmax <- standard_info[[4]]
+    if (is.nan(rmax)) {
+      stop("there is not enough parameter variation to estimate the marginal likelihood")
+    }
 
     cat("\nProcessing training sample...\n")
     cat(sprintf("   Lowest radial distance is %.9f\n",rmax))
@@ -118,6 +121,9 @@ lorad_estimate <- function(params, colspec, training_frac, training_mode, covera
     s <- p/2.0
     t <- rmax^2/(2.0*sigma_sqr)
     log_delta <- log(stats::pgamma(t, shape=s, scale=1))
+    if (is.nan(log_delta)) {
+      stop("there is not enough parameter variation to estimate the marginal likelihood")
+    }
 
     cat(sprintf("   Log Delta %.9f\n",log_delta))
 
@@ -159,6 +165,10 @@ lorad_estimate <- function(params, colspec, training_frac, training_mode, covera
     log_sum_ratios <- lorad_calc_log_sum(log_ratios)
 
     #Calculate LoRaD estimate of maximum likelihood
+    if (is.na(log_marginal_likelihood)) {
+      stop("there is not enough parameter variation to estimate the marginal likelihood")
+    }
     log_marginal_likelihood <- log_delta - (log_sum_ratios - log(nestimation))
+    
     cat(sprintf("   Log marginal likelihood is %f\n",log_marginal_likelihood))
 }

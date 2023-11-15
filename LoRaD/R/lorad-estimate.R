@@ -165,10 +165,11 @@ lorad_estimate <- function(params, colspec, training_frac, training_mode, covera
     log_sum_ratios <- lorad_calc_log_sum(log_ratios)
 
     #Calculate LoRaD estimate of maximum likelihood
-    if (is.na(log_marginal_likelihood)) {
+    log_marginal_likelihood <- log_delta - (log_sum_ratios - log(nestimation))
+    
+    if (is.nan(log_marginal_likelihood)) {
       stop("there is not enough parameter variation to estimate the marginal likelihood")
     }
-    log_marginal_likelihood <- log_delta - (log_sum_ratios - log(nestimation))
     
     cat(sprintf("   Log marginal likelihood is %f\n",log_marginal_likelihood))
 }

@@ -63,24 +63,24 @@ In this example we will compute an estimate of the marginal likelihood under thi
 First, load the lorad package.
 
 ```{r}
-library(LoRaD)
+library(lorad)
 ```
 
 Read in the file containing the posterior sample.
 
 ```{r}
-params <- read.table('k80-samples.txt', header=TRUE)
+# k80samples <- read.table('k80-samples.txt', header=TRUE)
 
-# Dimensions of params
-dim(params)
+# Dimensions of k80samples
+dim(k80samples)
 
-# Column names of params
-colnames(params)
+# Column names of k80samples
+colnames(k80samples)
 ```
 
 # Column Specification 
 
-Next, we must create a named vector to associate each column name in `params` with a column specification. Here are the possible column specifications:
+Next, we must create a named vector to associate each column name in `k80samples` with a column specification. Here are the possible column specifications:
 
 * **iteration**: The MCMC iteration
 * **posterior**: The values in this column are components of the posterior (log scale)
@@ -96,12 +96,12 @@ Here are the column specifications appropriate for this example.
 | :--------: | :-----------: |
 | iter       |  iteration    |
 | log.kernel |  posterior    |
-| edgelen    | nonnegative   |
-| kappa      | nonnegative   |
+| edgelen    | positive   |
+| kappa      | positive   |
 
 ```{r}
 # Create a named vector holding the column specifications
-colspec <- c("iter"="iteration", "log.kernel"="posterior", "edgelen"="nonnegative", "kappa"="nonnegative")
+colspec <- c("iter"="iteration", "log.kernel"="posterior", "edgelen"="positive", "kappa"="positive")
 ```
 
 The LoRaD requires all parameters to be unconstrained in their support. Thus, the `nonnegative` column specification for both `edgelen` and `kappa` results in a log transformation prior to application of the LoRaD method.
@@ -113,9 +113,9 @@ To run the LoRaD function we need to specify the **training fraction**, the **tr
 For this example we used 0.5 for the training fraction, 0.1 for the coverage fraction, and "left" for the training sample selection method. 
 
 ```{r}
-lorad_estimate(params, colspec, 0.5, "left", 0.1)
+lorad_estimate(k80samples, colspec, 0.5, "left", 0.1)
 ```
 
-For comparison, the two log marginal likelhood estimates reported by @wang2023 were -460.82239 (LoRaD method) and -460.86154 (Steppingstone method).
+For comparison, the two log marginal likelihood estimates reported by @wang2023 were -460.82239 (LoRaD method) and -460.86154 (Steppingstone method).
 
 ## Literature Cited

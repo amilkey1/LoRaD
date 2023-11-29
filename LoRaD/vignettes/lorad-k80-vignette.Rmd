@@ -104,7 +104,7 @@ Here are the column specifications appropriate for this example.
 colspec <- c("iter"="iteration", "log.kernel"="posterior", "edgelen"="positive", "kappa"="positive")
 ```
 
-The LoRaD requires all parameters to be unconstrained in their support. Thus, the `nonnegative` column specification for both `edgelen` and `kappa` results in a log transformation prior to application of the LoRaD method.
+The LoRaD requires all parameters to be unconstrained in their support. Thus, the `positive` column specification for both `edgelen` and `kappa` results in a log transformation prior to application of the LoRaD method.
 
 # Computing an Estimate of the Marginal Likelihood
 

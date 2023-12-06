@@ -3,7 +3,7 @@ title: "bridge-sampling-vignette"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{bridge-sampling-vignette}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{knitr::knitr}
   %\VignetteEncoding{UTF-8}
 ---
 

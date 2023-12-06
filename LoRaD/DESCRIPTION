@@ -11,11 +11,13 @@ Description: Estimates marginal likelihood from a posterior sample using the LoR
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3.9000
+RoxygenNote: 7.2.3
 Suggests: 
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0),
+    rstan (>= 2.32),
+    bridgesampling (>= 1.1)
 Imports:
 	expint, expm, stats
 Maintainer: Analisa Milkey <analisa.milkey@uconn.edu>
@@ -25,5 +27,5 @@ Author: Analisa Milkey [aut, cre],
 Config/testthat/edition: 3
 VignetteBuilder: knitr, rmarkdown
 Depends: 
-    R (>= 2.10)
+	R (>= 3.0)
 LazyData: true

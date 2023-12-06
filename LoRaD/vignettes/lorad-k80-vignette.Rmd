@@ -69,8 +69,6 @@ library(lorad)
 Read in the file containing the posterior sample.
 
 ```{r}
-# k80samples <- read.table('k80-samples.txt', header=TRUE)
-
 # Dimensions of k80samples
 dim(k80samples)
 

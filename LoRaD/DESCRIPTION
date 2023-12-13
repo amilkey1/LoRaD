@@ -19,7 +19,7 @@ Suggests:
     rstan (>= 2.32),
     bridgesampling (>= 1.1)
 Imports:
-	expint, expm, stats
+	stats
 Maintainer: Analisa Milkey <analisa.milkey@uconn.edu>
 Author: Analisa Milkey [aut, cre] (<https://orcid.org/0000-0002-1157-4363>),
 	Elena Korte [aut],

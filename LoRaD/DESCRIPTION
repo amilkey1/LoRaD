@@ -1,5 +1,5 @@
 Package: lorad
-Title: LoRaD (Lowest Radial Distance Method of Marginal Likelihood Estimation)
+Title: Lowest Radial Distance Method of Marginal Likelihood Estimation
 Version: 0.0.0.9000
 Authors@R: 
     c(
@@ -7,7 +7,7 @@ Authors@R:
         person(given = "Elena", family = "Korte", email = "elena.korte@uconn.edu", role = c("aut")), 
         person(given = c("Paul","O."), family = "Lewis", email = "paul.lewis@uconn.edu", role = c("aut"), comment = c(ORCID = "0000-0001-9852-8759"))
     )
-Description: Estimates marginal likelihood from a posterior sample using the LoRaD method: Wang et al. 2023. Systematic Biology 72(3):639-648 .
+Description: Estimates marginal likelihood from a posterior sample using the method described in Wang et al. 2023. Systematic Biology 72(3):639-648 .
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

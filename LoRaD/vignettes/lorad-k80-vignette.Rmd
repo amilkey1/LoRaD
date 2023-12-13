@@ -4,7 +4,7 @@ output: rmarkdown::html_vignette
 bibliography: k80.bib 
 vignette: >
   %\VignetteIndexEntry{lorad-k80-vignette}
-  %\VignetteEngine{knitr::knitr}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 

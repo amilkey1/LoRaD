@@ -4,7 +4,7 @@ output: rmarkdown::html_vignette
 bibliography: bridge-sampling.bib 
 vignette: >
   %\VignetteIndexEntry{bridge-sampling-vignette}
-  %\VignetteEngine{knitr::knitr}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 

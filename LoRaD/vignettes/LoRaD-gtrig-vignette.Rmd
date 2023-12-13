@@ -1,10 +1,10 @@
 ---
 title: "lorad-gtrig-vignette"
 output: rmarkdown::html_vignette
-bibliography: GTRIG.bib 
+bibliography: GTRIG.bib
 vignette: >
   %\VignetteIndexEntry{lorad-gtrig-vignette}
-  %\VignetteEngine{knitr::knitr}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 

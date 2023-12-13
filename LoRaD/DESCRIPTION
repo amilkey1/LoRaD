@@ -23,7 +23,7 @@ Imports:
 Maintainer: Analisa Milkey <analisa.milkey@uconn.edu>
 Author: Analisa Milkey [aut, cre] (<https://orcid.org/0000-0002-1157-4363>),
 	Elena Korte [aut],
-	Paul Lewis [aut] (<https://orcid.org/0000-0001-9852-8759>)
+	Paul O. Lewis [aut] (<https://orcid.org/0000-0001-9852-8759>)
 Config/testthat/edition: 3
 VignetteBuilder: knitr, rmarkdown
 Depends: 

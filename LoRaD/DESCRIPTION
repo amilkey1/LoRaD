@@ -7,7 +7,7 @@ Authors@R:
         person(given = "Elena", family = "Korte", email = "elena.korte@uconn.edu", role = c("aut")), 
         person(given = c("Paul","O."), family = "Lewis", email = "paul.lewis@uconn.edu", role = c("aut"), comment = c(ORCID = "0000-0001-9852-8759"))
     )
-Description: Estimates marginal likelihood from a posterior sample using the method described in Wang et al. 2023. Systematic Biology 72(3):639-648 .
+ Estimates marginal likelihood from a posterior sample using the method described in Wang et al. (2023) <doi:10.1093/sysbio/syad007>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

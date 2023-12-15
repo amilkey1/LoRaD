@@ -7,19 +7,60 @@
 lorad_estimate(params, colspec, training_frac, training_mode, coverage)
 }
 \arguments{
-\item{params}{Data frame in which rows are sample points and columns are parameters, except that last column holds the log posterior kernel}
+\item{params}{Data frame in which rows are sample points and columns are parameters,
+except that last column holds the log posterior kernel}
 
-\item{colspec}{Named character vector associating column names in params with column specifications}
+\item{colspec}{Named character vector associating column names in params with
+column specifications}
 
 \item{training_frac}{Number between 0 and 1 specifying the training fraction}
 
-\item{training_mode}{One of random, left, or right, specifying how training fraction is chosen}
+\item{training_mode}{One of random, left, or right, specifying how training
+fraction is chosen}
 
-\item{coverage}{Number between 0 and 1 specifying fraction of training sample used to compute working parameter space}
+\item{coverage}{Number between 0 and 1 specifying fraction of training sample
+used to compute working parameter space}
 }
 \value{
-LoRaD estimate of log marginal likelihood
+Named character vector of length 11.
 }
 \description{
-Calculates the LoRaD estimate of the marginal likelihood
+Provided with a data frame containing sampled paraneter vectors and a dictionary
+relating column names to parameter types, returns a named character vector containing
+the following quantities:
+\itemize{
+\item logML (the estimated log marginal likelihood)
+\item nsamples (number of samples)
+\item nparams (length of each parameter vector)
+\item training_frac (fraction of samples used for training)
+\item tsamples (number of samples used for training)
+\item esamples (number of sampled used for etimation)
+\item coverage (nominal fraction of the estimation sampled used)
+\item esamplesused (number of estimation samples actually used for estimation)
+\item realized_coverage (actual fraction of estimation sample used)
+\item rmax (lowest radial distance: defines boundary of working parameter space)
+\item log_delta (volume under the unnormalized posterior inside working parameter space)
+}
+}
+\examples{
+normals <- rnorm(1000,0,10)
+prob_normals <- dnorm(normals,0,10,log=TRUE) 
+proportions <- rbeta(1000,1,2)
+prob_proportions <- dbeta(proportions,1,2,log=TRUE)
+lengths <- rgamma(1000, 10, 1)
+prob_lengths <- dgamma(lengths,10,1,log=TRUE)
+paramsdf <- data.frame(
+    normals,prob_normals,
+    proportions, prob_proportions,
+    lengths, prob_lengths)
+columnkey <- c(
+    "normals"="unconstrained", 
+    "prob_normals"="posterior", 
+    "proportions"="proportion", 
+    "prob_proportions"="posterior", 
+    "lengths"="positive", 
+    "prob_lengths"="posterior")
+results <- lorad_transform(paramsdf, columnkey)
+print(lorad_summary(results))
+
 }

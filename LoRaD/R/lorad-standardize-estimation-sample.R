@@ -1,10 +1,12 @@
-#' This function standardizes the estimation sample using means and standard deviations
-#' from the training sample.
-#'
-#' @param standardinfo List containing the log Jacobian of the standardization transformation, the inverse square root matrix, the column means, and rmax (the radial distance representing the edge of the working parameter space)
-#' @param y Data frame containing a column for each transformed model parameter in the estimation sample, with last column being the log kernel values
-#' @return A new data frame consisting of the standardized estimation sample with log kernel in last column
-#' @export 
+#' Transforms training sample using training sample means and standard deviations
+#' 
+#' @param standardinfo List containing the log Jacobian of the standardization 
+#'     transformation, the inverse square root matrix, the column means, and 
+#'     rmax (the radial distance representing the edge of the working parameter space)
+#' @param y Data frame containing a column for each transformed model parameter 
+#'     in the estimation sample, with last column being the log kernel values
+#' @returns A new data frame consisting of the standardized estimation sample with
+#'     log kernel in last column
 #'
 lorad_standardize_estimation_sample <- function(standardinfo, y) {
     # Remove log kernel column because it's not a parameter

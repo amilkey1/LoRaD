@@ -1,17 +1,53 @@
 #' Calculates the LoRaD estimate of the marginal likelihood
 #'
-#' @param params Data frame in which rows are sample points and columns are parameters, except that last column holds the log posterior kernel
-#' @param colspec Named character vector associating column names in params with column specifications
-#' @param training_frac Number between 0 and 1 specifying the training fraction
-#' @param training_mode One of random, left, or right, specifying how training fraction is chosen
-#' @param coverage Number between 0 and 1 specifying fraction of training sample used to compute working parameter space
-#' @return LoRaD estimate of log marginal likelihood
-#' @export 
+#' Provided with a data frame containing sampled paraneter vectors and a dictionary
+#' relating column names to parameter types, returns a named character vector containing
+#' the following quantities:
+#' * logML (the estimated log marginal likelihood)
+#' * nsamples (number of samples)
+#' * nparams (length of each parameter vector)
+#' * training_frac (fraction of samples used for training)
+#' * tsamples (number of samples used for training)
+#' * esamples (number of sampled used for etimation)
+#' * coverage (nominal fraction of the estimation sampled used)
+#' * esamplesused (number of estimation samples actually used for estimation)
+#' * realized_coverage (actual fraction of estimation sample used)
+#' * rmax (lowest radial distance: defines boundary of working parameter space)
+#' * log_delta (volume under the unnormalized posterior inside working parameter space)
 #'
+#' @param params Data frame in which rows are sample points and columns are parameters, 
+#'     except that last column holds the log posterior kernel
+#' @param colspec Named character vector associating column names in params with 
+#'     column specifications
+#' @param training_frac Number between 0 and 1 specifying the training fraction
+#' @param training_mode One of random, left, or right, specifying how training 
+#'     fraction is chosen
+#' @param coverage Number between 0 and 1 specifying fraction of training sample 
+#'     used to compute working parameter space
+#' @returns Named character vector of length 11.
+#' @export 
+#' @examples
+#' normals <- rnorm(1000,0,10)
+#' prob_normals <- dnorm(normals,0,10,log=TRUE) 
+#' proportions <- rbeta(1000,1,2)
+#' prob_proportions <- dbeta(proportions,1,2,log=TRUE)
+#' lengths <- rgamma(1000, 10, 1)
+#' prob_lengths <- dgamma(lengths,10,1,log=TRUE)
+#' paramsdf <- data.frame(
+#'     normals,prob_normals,
+#'     proportions, prob_proportions,
+#'     lengths, prob_lengths)
+#' columnkey <- c(
+#'     "normals"="unconstrained", 
+#'     "prob_normals"="posterior", 
+#'     "proportions"="proportion", 
+#'     "prob_proportions"="posterior", 
+#'     "lengths"="positive", 
+#'     "prob_lengths"="posterior")
+#' results <- lorad_transform(paramsdf, columnkey)
+#' lorad_summary(results)
+#' 
 lorad_estimate <- function(params, colspec, training_frac, training_mode, coverage) {
-    cat("This is lorad (ver. 1.0):\n")
-
-  
   if (length(params) == 0) {
     stop("params are missing")
   }
@@ -44,42 +80,31 @@ lorad_estimate <- function(params, colspec, training_frac, training_mode, covera
     }
 	# Determine sites included in training sample and place remainder in estimation sample
     y <- floor(training_frac*nsamples)
-    training_included_sites_str <- "randomly chosen"
-    estim_included_sites_str <- "complement of training site set"
+    tinclsamples <- "randomly chosen"
+    einclsamples <- "complement of training samples set"
     if (tmode == "random") {
         x <- 1:nsamples
         z <- sample(x, y)
     }
     else if (tmode == "left") {
         z <- 1:y
-        training_included_sites_str <- sprintf("sites 1 to %d", y)
-        estim_included_sites_str <- sprintf("sites %d to %d", y+1, nsamples)
+        tinclsamples <- sprintf("samples 1 to %d", y)
+        einclsamples <- sprintf("samples %d to %d", y+1, nsamples)
     }
     else if (tmode == "right") {
         z <- y:nsamples
-        training_included_sites_str <- sprintf("sites %d to %d", y, nsamples)
-        estim_included_sites_str <- sprintf("sites 1 to %d", y)
+        tinclsamples <- sprintf("samples %d to %d", y, nsamples)
+        einclsamples <- sprintf("samples 1 to %d", y)
     }
     else {
         stop(sprintf("Unknown training mode %s", training_mode))
     }
     
-    # Provide feedback to user  
-    cat(sprintf("   Parameter sample comprises %d sampled points\n", nsamples))
-    cat(sprintf("   Each sample point is a vector of %d parameter values\n", nparams))
-    cat(sprintf("   Training fraction is %g\n", training_frac))
-    cat(sprintf("   Training fraction mode is %s\n", tmode))
-    cat(sprintf("   Coverage specified is %g\n", coverage))
-
     # Partition transformed samples into training and estimation samples
     training_df <- transform_df[z,]
     estimation_df <- transform_df[-z,] 
-
-    # Print out information about training and estimation samples
-    cat("\nPartitioning samples into training and estimation:\n")
-    cat(sprintf("   Sample size is %d\n",nrow(transform_df)))
-    cat(sprintf("   Training sample size is %d (%s)\n", nrow(training_df), training_included_sites_str))
-    cat(sprintf("   Estimation sample size %d (%s)\n", nrow(estimation_df), estim_included_sites_str))
+    tsamples <- nrow(training_df)
+    esamples <- nrow(estimation_df)
     
     # Store the log kernel values in a vector
     last_col_num <- ncol(estimation_df)
@@ -109,9 +134,6 @@ lorad_estimate <- function(params, colspec, training_frac, training_mode, covera
       stop("there is not enough parameter variation to estimate the marginal likelihood")
     }
 
-    cat("\nProcessing training sample...\n")
-    cat(sprintf("   Lowest radial distance is %.9f\n",rmax))
-
     # The variance is 1 for standard normal
     sigma_sqr <- 1
   
@@ -124,8 +146,6 @@ lorad_estimate <- function(params, colspec, training_frac, training_mode, covera
     if (is.nan(log_delta)) {
       stop("there is not enough parameter variation to estimate the marginal likelihood")
     }
-
-    cat(sprintf("   Log Delta %.9f\n",log_delta))
 
     # Calculate the normalizing constant for reference function (multivariate standard normal)
     sigma <- sqrt(sigma_sqr)
@@ -152,10 +172,8 @@ lorad_estimate <- function(params, colspec, training_frac, training_mode, covera
         }
     }
  
-    cat("\nProcessing estimation sample...\n")
-    cat(sprintf("   Number of samples used is %d\n",j))
-    cat(sprintf("   Nominal coverage specified is %f\n",coverage))
-    cat(sprintf("   Actual coverage is %f\n",j/nestimation))
+    esamplesused <- j
+    realized_coverage <- j/nestimation
   
     if (length(log_ratios)==0){
         warning(sprintf("No estimation samples were within the working parameter space (rmax=%g)",rmax))
@@ -170,6 +188,18 @@ lorad_estimate <- function(params, colspec, training_frac, training_mode, covera
     if (is.nan(log_marginal_likelihood)) {
       stop("there is not enough parameter variation to estimate the marginal likelihood")
     }
-    
-    cat(sprintf("   Log marginal likelihood is %f\n",log_marginal_likelihood))
+        
+    results <- c(  
+        "logML"=log_marginal_likelihood,
+        "nsamples"=nsamples,
+        "nparams"=nparams,
+        "training_frac"=training_frac,
+        "coverage"=coverage,
+        "tsamples"=tsamples,
+        "esamples"=esamples,
+        "esamplesused"=esamplesused,
+        "realized_coverage"=realized_coverage,
+        "rmax"=rmax,
+        "log_delta"=log_delta)
+    results
 }

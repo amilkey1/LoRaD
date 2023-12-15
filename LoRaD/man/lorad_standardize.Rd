@@ -2,24 +2,25 @@
 % Please edit documentation in R/lorad-standardize.R
 \name{lorad_standardize}
 \alias{lorad_standardize}
-\title{Standardizes parameters that have already been transformed (if necessary) so that they
-are unconstrained. Standardization involves subtracting the mean for a particular parameter
-from each of its values and dividing by the standard deviation. Assumes that the log kernel
-is the last column in the supplied data frame.}
+\title{Transforms unconstrained parameters to have the same location and scale}
 \usage{
 lorad_standardize(df, coverage)
 }
 \arguments{
-\item{df}{Data frame containing a column for each model parameter sampled and a final column of log posterior kernel values}
+\item{df}{Data frame containing a column for each model parameter sampled
+and a final column of log posterior kernel values}
 
 \item{coverage}{Fraction of the training sample used to compute working parameter space}
 }
 \value{
-List containing the log-Jacobian of the standardization transformation, the inverse square root matrix, a vector of column means, and rmax (radial distance to furthest point in working parameter space)
+List containing the log-Jacobian of the standardization transformation,
+the inverse square root matrix, a vector of column means, and rmax (radial
+distance to furthest point in working parameter space)
 }
 \description{
-Standardizes parameters that have already been transformed (if necessary) so that they
-are unconstrained. Standardization involves subtracting the mean for a particular parameter
-from each of its values and dividing by the standard deviation. Assumes that the log kernel
-is the last column in the supplied data frame.
+Standardizes parameters that have already been transformed (if necessary) to have
+unconstrained support. Standardization involves subtracting the sample mean
+and dividing by the sample standard deviation. Assumes that the log posterior kernel
+(i.e. the log of the unnormalized posterior) is the last column in the supplied
+data frame.
 }

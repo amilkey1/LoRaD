@@ -2,26 +2,62 @@
 % Please edit documentation in R/lorad-transform.R
 \name{lorad_transform}
 \alias{lorad_transform}
-\title{Takes a data frame consisting of sampled parameter values
-and a named character vector associating a column name
-in the data frame to a column specification and
-returns a new data frame containing parameters that
-have been log-transformed if originally constrained.}
+\title{Log (or log-ratio) transform parameters having constrained support}
 \usage{
 lorad_transform(params, colspec)
 }
 \arguments{
-\item{params}{Data frame containing a column for each model parameter sampled as well as columns that constitute the log posterior kernel}
+\item{params}{Data frame containing a column for each model parameter
+sampled as well as one or more columns that, when summed, constitute
+the log joint posterior kernel}
 
-\item{colspec}{Named character vector associating each column name in params to a column specification}
+\item{colspec}{Named character vector matching each column name in
+params with a column specification}
 }
 \value{
-A new data frame consisting of transformed parameter values
+A new data frame comprising transformed parameter values
+with a final column holding the log joint posterior kernel
 }
 \description{
-Takes a data frame consisting of sampled parameter values
-and a named character vector associating a column name
-in the data frame to a column specification and
-returns a new data frame containing parameters that
-have been log-transformed if originally constrained.
+Log-transforms parameters with support (0,infinity), log-ratio transforms
+K-dimensional parameters with support a (K-1)-simplex, logit transforms
+parameters with support \link{0,1}, and leaves unchanged parameters with
+unconstrained support (-infinity, infinity).
+}
+\examples{
+# A data frame with a column of normally-distributed parameter values,
+# a column of beta-distributed parameter values, a column of gamma-distributed
+# parameter values, and three columns representing Dirichlet-distributed
+# parameter values, is log transformed. The columns containing the 
+# log densities of each parameter are summed and the total becomes the last
+# column in the returned data frame. If this were a real example, the columns
+# specified as `posterior` would represent components of the log posterior  
+# kernel (i.e. the unnormalized posterior, likelihood*prior).
+normals <- rnorm(5,0,10)
+prob_normals <- dnorm(normals,0,10,log=TRUE) 
+proportions <- rbeta(5,1,2)
+prob_proportions <- dbeta(proportions,1,2,log=TRUE)
+lengths <- rgamma(5, 10, 1)
+prob_lengths <- dgamma(lengths,10,1,log=TRUE)
+freqA <- c(0.6, 0.2, 0.1, 0.5, 0.2)
+freqB <- c(0.3, 0.1, 0.8, 0.1, 0.5)
+freqC <- c(0.1, 0.7, 0.1, 0.4, 0.3)
+prob_freqs <- 0.0  # assuming Dirichlet(1,1,1)
+paramsdf <- data.frame(
+    normals,prob_normals,
+    proportions, prob_proportions,
+    lengths, prob_lengths,
+    freqA, freqB, freqC, prob_freqs)
+columnkey <- c(
+    "normals"="unconstrained", 
+    "prob_normals"="posterior", 
+    "proportions"="proportion", 
+    "prob_proportions"="posterior", 
+    "lengths"="positive", 
+    "prob_lengths"="posterior", 
+    "freqA"="simplex", 
+    "freqB"="simplex", 
+    "freqC"="simplexfinal",
+    "prob_freqs"="posterior")
+print(lorad_transform(paramsdf, columnkey))
 }

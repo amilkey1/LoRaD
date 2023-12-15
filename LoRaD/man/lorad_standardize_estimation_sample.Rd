@@ -2,20 +2,22 @@
 % Please edit documentation in R/lorad-standardize-estimation-sample.R
 \name{lorad_standardize_estimation_sample}
 \alias{lorad_standardize_estimation_sample}
-\title{This function standardizes the estimation sample using means and standard deviations
-from the training sample.}
+\title{Transforms training sample using training sample means and standard deviations}
 \usage{
 lorad_standardize_estimation_sample(standardinfo, y)
 }
 \arguments{
-\item{standardinfo}{List containing the log Jacobian of the standardization transformation, the inverse square root matrix, the column means, and rmax (the radial distance representing the edge of the working parameter space)}
+\item{standardinfo}{List containing the log Jacobian of the standardization
+transformation, the inverse square root matrix, the column means, and
+rmax (the radial distance representing the edge of the working parameter space)}
 
-\item{y}{Data frame containing a column for each transformed model parameter in the estimation sample, with last column being the log kernel values}
+\item{y}{Data frame containing a column for each transformed model parameter
+in the estimation sample, with last column being the log kernel values}
 }
 \value{
-A new data frame consisting of the standardized estimation sample with log kernel in last column
+A new data frame consisting of the standardized estimation sample with
+log kernel in last column
 }
 \description{
-This function standardizes the estimation sample using means and standard deviations
-from the training sample.
+Transforms training sample using training sample means and standard deviations
 }

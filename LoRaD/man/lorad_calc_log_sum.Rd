@@ -2,7 +2,7 @@
 % Please edit documentation in R/lorad-calc-log-sum.R
 \name{lorad_calc_log_sum}
 \alias{lorad_calc_log_sum}
-\title{Calculates the (natural) log of a sum without leaving the log scale by factoring out the largest element}
+\title{Calculate a sum on log scale}
 \usage{
 lorad_calc_log_sum(logx)
 }
@@ -10,8 +10,14 @@ lorad_calc_log_sum(logx)
 \item{logx}{Numeric vector in which elements are on log scale}
 }
 \value{
-The log of the sum of the (expontiated) elements supplied in logx
+The log of the sum of the (exponentiated) elements supplied in logx
 }
 \description{
-Calculates the (natural) log of a sum without leaving the log scale by factoring out the largest element
+Calculates the (natural) log of a sum without leaving the log scale by factoring
+out the largest element.
+}
+\examples{
+# log of sum 1 + 2 + 3 is log(6) = 1.79175947
+v <- c(log(1), log(2), log(3))
+print(lorad_calc_log_sum(v))
 }

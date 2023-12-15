@@ -165,7 +165,8 @@ To run the LoRaD function we need to specify the **training fraction**, the **tr
 For this example we used 0.5 for the training fraction, 0.1 for the coverage fraction, and "left" for the training sample selection method.
 
 ```{r}
-lorad_estimate(gtrigsamples, colspec, 0.5, "left", 0.1)
+results <- lorad_estimate(gtrigsamples, colspec, 0.5, "left", 0.1)
+lorad_summary(results)
 ```
 
 The log marginal likelihood is -4440.521454. 

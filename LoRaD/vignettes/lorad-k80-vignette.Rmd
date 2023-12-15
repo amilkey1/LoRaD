@@ -111,7 +111,8 @@ To run the LoRaD function we need to specify the **training fraction**, the **tr
 For this example we used 0.5 for the training fraction, 0.1 for the coverage fraction, and "left" for the training sample selection method. 
 
 ```{r}
-lorad_estimate(k80samples, colspec, 0.5, "left", 0.1)
+results <- lorad_estimate(k80samples, colspec, 0.5, "left", 0.1)
+lorad_summary(results)
 ```
 
 For comparison, the two log marginal likelihood estimates reported by @wang2023 were -460.82239 (LoRaD method) and -460.86154 (Steppingstone method).

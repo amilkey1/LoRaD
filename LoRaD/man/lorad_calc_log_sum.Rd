@@ -19,5 +19,5 @@ out the largest element.
 \examples{
 # log of sum 1 + 2 + 3 is log(6) = 1.79175947
 v <- c(log(1), log(2), log(3))
-print(lorad_calc_log_sum(v))
+lorad_calc_log_sum(v)
 }

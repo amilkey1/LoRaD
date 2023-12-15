@@ -61,6 +61,6 @@ columnkey <- c(
     "lengths"="positive", 
     "prob_lengths"="posterior")
 results <- lorad_transform(paramsdf, columnkey)
-print(lorad_summary(results))
+lorad_summary(results)
 
 }

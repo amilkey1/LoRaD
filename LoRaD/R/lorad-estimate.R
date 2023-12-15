@@ -27,11 +27,11 @@
 #' @returns Named character vector of length 11.
 #' @export 
 #' @examples
-#' normals <- rnorm(1000,0,10)
+#' normals <- rnorm(1000000,0,10)
 #' prob_normals <- dnorm(normals,0,10,log=TRUE) 
-#' proportions <- rbeta(1000,1,2)
+#' proportions <- rbeta(1000000,1,2)
 #' prob_proportions <- dbeta(proportions,1,2,log=TRUE)
-#' lengths <- rgamma(1000, 10, 1)
+#' lengths <- rgamma(1000000, 10, 1)
 #' prob_lengths <- dgamma(lengths,10,1,log=TRUE)
 #' paramsdf <- data.frame(
 #'     normals,prob_normals,
@@ -44,7 +44,7 @@
 #'     "prob_proportions"="posterior", 
 #'     "lengths"="positive", 
 #'     "prob_lengths"="posterior")
-#' results <- lorad_transform(paramsdf, columnkey)
+#' results <- lorad_estimate(paramsdf, columnkey, 0.5, 'random', 0.1)
 #' lorad_summary(results)
 #' 
 lorad_estimate <- function(params, colspec, training_frac, training_mode, coverage) {

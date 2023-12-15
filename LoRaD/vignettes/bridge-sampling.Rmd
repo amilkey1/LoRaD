@@ -156,14 +156,12 @@ The log marginal likelihood estimates are -37.53668 for ${\cal H}_0$ and
 
 ## Export the sampled parameters
 
-In order to use the LoRaD method, we need to export the sampled parameter values along with the unnormalized log posterior to a text file.The `permuted=TRUE` setting causes samples from all 3 chains to be merged.
+In order to use the LoRaD method, we need to export the sampled parameter values along with the unnormalized log posterior to a data frame. The `permuted=TRUE` setting causes samples from all 3 chains to be merged.
 
 ```{r cache=FALSE}
 paramsH0 <- data.frame(extract(stanfitH0, permuted=TRUE))
-write.table(paramsH0, file="samplesH0.txt", sep="\t", row.names=FALSE)
 
 paramsH1 <- data.frame(extract(stanfitH1, permuted=TRUE))
-write.table(paramsH1, file="samplesH1.txt", sep="\t", row.names=FALSE)
 ```
 
 ## The null hypothesis
@@ -182,7 +180,8 @@ The LoRaD method uses the training sample to determine the mean and covariance m
 
 ```{r cache=FALSE}
 colspecH0 <- c("tau2"="unconstrained", "theta.1"="unconstrained", "theta.2"="unconstrained", "theta.3"="unconstrained", "theta.4"="unconstrained", "theta.5"="unconstrained", "theta.6"="unconstrained", "theta.7"="unconstrained", "theta.8"="unconstrained", "theta.9"="unconstrained", "theta.10"="unconstrained", "theta.11"="unconstrained", "theta.12"="unconstrained", "theta.13"="unconstrained", "theta.14"="unconstrained", "theta.15"="unconstrained", "theta.16"="unconstrained", "theta.17"="unconstrained", "theta.18"="unconstrained", "theta.19"="unconstrained", "theta.20"="unconstrained", "lp__"="posterior")
-lorad_estimate(paramsH0, colspecH0, 0.5, "random", 0.1)
+results0 <- lorad_estimate(paramsH0, colspecH0, 0.5, "random", 0.1)
+lorad_summary(results0)
 ```
 
 The log marginal likelihood for the null hypothesis, estimated by LoRaD, is -37.385193, which is quite close to the value -37.53668 estimated by the bridgesampling package.
@@ -193,7 +192,8 @@ Repeat the LoRaD analysis for the alternative hypothesis.
 
 ```{r cache=FALSE}
 colspecH1 <- c("mu"="unconstrained", "tau2"="unconstrained", "theta.1"="unconstrained", "theta.2"="unconstrained", "theta.3"="unconstrained", "theta.4"="unconstrained", "theta.5"="unconstrained", "theta.6"="unconstrained", "theta.7"="unconstrained", "theta.8"="unconstrained", "theta.9"="unconstrained", "theta.10"="unconstrained", "theta.11"="unconstrained", "theta.12"="unconstrained", "theta.13"="unconstrained", "theta.14"="unconstrained", "theta.15"="unconstrained", "theta.16"="unconstrained", "theta.17"="unconstrained", "theta.18"="unconstrained", "theta.19"="unconstrained", "theta.20"="unconstrained", "lp__"="posterior")
-lorad_estimate(paramsH1, colspecH1, 0.5, "random", 0.1)
+results1 <- lorad_estimate(paramsH1, colspecH1, 0.5, "random", 0.1)
+lorad_summary(results1)
 ```
 
 The log marginal likelihood for the altenative hypothesis was -37.693758 for lorad (compared to -37.7984 for bridgesampling).

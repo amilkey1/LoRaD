@@ -11,7 +11,7 @@
 #' results <- lorad_estimate(paramsdf, columnkey, 0.5, 'left', 0.1)
 #' lorad_summary(results)
 lorad_summary <- function(results) {
-    summary <- paste("This is lorad",packageVersion("lorad"),"\n") 
+    summary <- paste("This is lorad",utils::packageVersion("lorad"),"\n") 
     summary <- paste(summary, sprintf("   Parameter sample comprises %d sampled points\n", results[["nsamples"]]))
     if (results[["nparams"]] == 1) {
         summary <- paste(summary, "   Each sample point is a vector of 1 parameter value\n")

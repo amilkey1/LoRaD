@@ -16,8 +16,3 @@ The log of the sum of the (exponentiated) elements supplied in logx
 Calculates the (natural) log of a sum without leaving the log scale by factoring
 out the largest element.
 }
-\examples{
-# log of sum 1 + 2 + 3 is log(6) = 1.79175947
-v <- c(log(1), log(2), log(3))
-lorad_calc_log_sum(v)
-}
